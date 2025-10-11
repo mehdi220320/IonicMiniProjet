@@ -1,20 +1,170 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+<!-- Side Menu -->
+<ion-menu contentId="main-content" type="overlay">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Profile</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
-</ion-content>
+  <ion-content>
+    <!-- User Profile Section -->
+    <div class="user-profile">
+      <div class="avatar-container">
+        <ion-avatar>
+          <ion-icon name="person" class="avatar-icon"></ion-icon>
+        </ion-avatar>
+      </div>
+      <h2 class="user-name">{{ user?.username || 'Guest' }}</h2>
+      <p class="user-email">{{ user?.email || 'guest@example.com' }}</p>
+      <ion-badge [color]="user?.role === 'ADMIN' ? 'warning' : 'secondary'" class="user-role">
+        {{ user?.role || 'USER' }}
+      </ion-badge>
+    </div>
+
+    <ion-list class="menu-list">
+      <ion-item button detail="false" lines="none">
+        <ion-icon name="home-outline" slot="start"></ion-icon>
+        <ion-label>Home</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none">
+        <ion-icon name="person-outline" slot="start"></ion-icon>
+        <ion-label>Profile</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none">
+        <ion-icon name="settings-outline" slot="start"></ion-icon>
+        <ion-label>Settings</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none">
+        <ion-icon name="notifications-outline" slot="start"></ion-icon>
+        <ion-label>Notifications</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none">
+        <ion-icon name="help-circle-outline" slot="start"></ion-icon>
+        <ion-label>Help & Support</ion-label>
+      </ion-item>
+    </ion-list>
+
+    <div class="menu-footer">
+      <ion-menu-toggle>
+        <ion-button expand="block" color="danger" (click)="logout()">
+          <ion-icon name="log-out-outline" slot="start"></ion-icon>
+          Logout
+        </ion-button>
+      </ion-menu-toggle>
+    </div>
+  </ion-content>
+</ion-menu>
+
+<!-- Main Content -->
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button auto-hide="false"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Dashboard</ion-title>
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-icon name="notifications-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <h1>Welcome back, {{ user?.username }}!</h1>
+      <p>Here's what's happening today</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-container">
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <ion-icon name="cube-outline" class="stat-icon"></ion-icon>
+          <h2>124</h2>
+          <p>Total Projects</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <ion-icon name="checkmark-circle-outline" class="stat-icon"></ion-icon>
+          <h2>89</h2>
+          <p>Completed</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <ion-icon name="time-outline" class="stat-icon"></ion-icon>
+          <h2>35</h2>
+          <p>Pending</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="section-container">
+      <h3 class="section-title">Recent Activity</h3>
+
+      <ion-card class="activity-card">
+        <ion-item lines="none">
+          <ion-icon name="document-text-outline" slot="start" color="primary"></ion-icon>
+          <ion-label>
+            <h2>New document created</h2>
+            <p>2 hours ago</p>
+          </ion-label>
+        </ion-item>
+      </ion-card>
+
+      <ion-card class="activity-card">
+        <ion-item lines="none">
+          <ion-icon name="people-outline" slot="start" color="success"></ion-icon>
+          <ion-label>
+            <h2>Team meeting scheduled</h2>
+            <p>5 hours ago</p>
+          </ion-label>
+        </ion-item>
+      </ion-card>
+
+      <ion-card class="activity-card">
+        <ion-item lines="none">
+          <ion-icon name="chatbubbles-outline" slot="start" color="tertiary"></ion-icon>
+          <ion-label>
+            <h2>3 new messages</h2>
+            <p>1 day ago</p>
+          </ion-label>
+        </ion-item>
+      </ion-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section-container">
+      <h3 class="section-title">Quick Actions</h3>
+
+      <div class="quick-actions">
+        <ion-button expand="block" color="primary">
+          <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+          New Project
+        </ion-button>
+
+        <ion-button expand="block" color="secondary">
+          <ion-icon name="folder-open-outline" slot="start"></ion-icon>
+          Browse Files
+        </ion-button>
+      </div>
+    </div>
+  </ion-content>
+
+  <ion-footer>
+    <ion-toolbar>
+      <ion-title class="footer-text">© 2025 Your App Name</ion-title>
+    </ion-toolbar>
+  </ion-footer>
+</div>

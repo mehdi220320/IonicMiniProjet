@@ -1,0 +1,81 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Create Account</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="auth-container">
+    <div class="logo-section">
+      <ion-icon name="cart-outline" class="logo"></ion-icon>
+      <h2>Join Marketplace</h2>
+      <p>Create your account to start shopping</p>
+    </div>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSignup()">
+      <ion-list lines="none">
+        <ion-item>
+          <ion-label position="stacked">Full Name</ion-label>
+          <ion-input
+            formControlName="fullName"
+            type="text"
+            placeholder="Enter your full name"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Email</ion-label>
+          <ion-input
+            formControlName="email"
+            type="email"
+            placeholder="Enter your email"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Password</ion-label>
+          <ion-input type="password"
+                     formControlName="password"
+                     placeholder="Confirm your password"
+                     required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Confirm Password</ion-label>
+          <ion-input type="password"
+                     formControlName="confirmPassword"
+                     placeholder="Confirm your password"
+                     required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-checkbox slot="start" formControlName="terms"></ion-checkbox>
+          <ion-label class="terms-label">
+            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+      <ion-button
+        type="submit"
+        expand="block"
+        class="ion-margin-top"
+        [disabled]="!signupForm.valid || isLoading">
+        <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+        <span *ngIf="!isLoading">Create Account</span>
+      </ion-button>
+    </form>
+    <div class="login-link ion-text-center ion-margin-top">
+      <p>Already have an account?
+        <ion-button fill="clear" routerLink="/login">Sign In</ion-button>
+      </p>
+    </div>
+  </div>
+</ion-content>

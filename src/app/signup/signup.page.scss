@@ -1,0 +1,196 @@
+.auth-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.logo-section {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .logo {
+    font-size: 4rem;
+    color: var(--ion-color-primary);
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--ion-color-dark);
+  }
+
+  p {
+    margin: 0;
+    color: var(--ion-color-medium);
+    font-size: 0.9rem;
+  }
+}
+
+ion-list {
+  background: transparent;
+
+  ion-item {
+    --background: transparent;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    margin-bottom: 1rem;
+
+    ion-label {
+      color: var(--ion-color-dark);
+      font-weight: 500;
+    }
+
+    ion-input {
+      --padding-start: 12px;
+      --background: var(--ion-color-light);
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+
+
+    ion-checkbox {
+      --size: 18px;
+      --checkbox-background-checked: var(--ion-color-primary);
+      margin-right: 12px;
+    }
+
+    .terms-label {
+      font-size: 0.9rem;
+      white-space: normal;
+      line-height: 1.4;
+
+      a {
+        color: var(--ion-color-primary);
+        text-decoration: none;
+        font-weight: 500;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+// Specific styling for password items
+
+
+// Submit button styling
+ion-button[type="submit"] {
+  --border-radius: 8px;
+  --padding-top: 20px;
+  --padding-bottom: 20px;
+  font-weight: 600;
+  margin-top: 1rem;
+
+  &:disabled {
+    --background: var(--ion-color-medium);
+    --background-hover: var(--ion-color-medium);
+    --background-activated: var(--ion-color-medium);
+  }
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 2rem 0;
+  color: var(--ion-color-medium);
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--ion-color-light-shade);
+  }
+
+  span {
+    padding: 0 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+// Social signup buttons
+ion-button[fill="outline"] {
+  --border-radius: 8px;
+  --padding-top: 18px;
+  --padding-bottom: 18px;
+  --border-width: 1px;
+  --border-color: var(--ion-color-medium);
+  --color: var(--ion-color-dark);
+  margin-bottom: 12px;
+
+  ion-icon {
+    color: var(--ion-color-primary);
+    font-size: 1.2rem;
+  }
+
+  &:hover {
+    --background: var(--ion-color-light);
+  }
+}
+
+.login-link {
+  p {
+    color: var(--ion-color-medium);
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  ion-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+    --color: var(--ion-color-primary);
+    font-weight: 600;
+    margin-top: -4px;
+  }
+}
+
+// Form validation styles
+ion-item {
+  &.ion-invalid {
+    ion-label {
+      color: var(--ion-color-danger);
+    }
+
+    ion-input {
+      --background: rgba(var(--ion-color-danger-rgb), 0.05);
+    }
+  }
+
+  &.ion-valid {
+    ion-label {
+      color: var(--ion-color-success);
+    }
+  }
+}
+
+// Loading state
+ion-spinner {
+  margin-right: 8px;
+}
+
+// Responsive design
+@media (min-height: 700px) {
+  .auth-container {
+    padding: 40px 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .auth-container {
+    padding: 10px 0;
+  }
+
+  .logo-section {
+    .logo {
+      font-size: 3rem;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+    }
+  }
+
+
+}

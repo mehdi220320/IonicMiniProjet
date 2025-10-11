@@ -1,0 +1,106 @@
+.auth-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.logo-section {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .logo {
+    font-size: 4rem;
+    color: var(--ion-color-primary);
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--ion-color-dark);
+  }
+
+  p {
+    margin: 0;
+    color: var(--ion-color-medium);
+    font-size: 0.9rem;
+  }
+}
+
+ion-list {
+  background: transparent;
+
+  ion-item {
+    --background: transparent;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    margin-bottom: 1rem;
+
+    ion-label {
+      color: var(--ion-color-dark);
+      font-weight: 500;
+    }
+
+    ion-input {
+      --padding-start: 12px;
+      --background: var(--ion-color-light);
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+
+    .terms-label {
+      font-size: 0.9rem;
+      white-space: normal;
+
+      a {
+        color: var(--ion-color-primary);
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 2rem 0;
+  color: var(--ion-color-medium);
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--ion-color-light-shade);
+  }
+
+  span {
+    padding: 0 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+.login-link {
+  p {
+    color: var(--ion-color-medium);
+    margin: 0;
+  }
+
+  ion-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+  }
+}
+
+// Password strength indicator
+ion-item {
+  ion-icon {
+    font-size: 1.2rem;
+  }
+}
+
+// Responsive design
+@media (min-height: 700px) {
+  .auth-container {
+    padding: 40px 0;
+  }
+}
