@@ -14,6 +14,7 @@ export class HomePage {
   private router = inject(Router);
 
   user: User | null = null;
+  searchQuery: string = '';
 
   ngOnInit() {
     this.loadUserData();
@@ -21,11 +22,17 @@ export class HomePage {
 
   async loadUserData() {
     try {
-
+      // Get user data from your auth service
+      // Replace this with your actual method to get user data
       this.user = await this.authService.getCurrentUser();
 
+      // If your auth service stores user differently, adjust accordingly:
+      // this.user = this.authService.currentUser;
+      // or
+      // this.authService.user$.subscribe(user => this.user = user);
     } catch (e) {
       console.log('Error loading user data:', e);
+      // Set default or guest user if needed
       this.user = {
         id: 'guest',
         username: 'Guest User',

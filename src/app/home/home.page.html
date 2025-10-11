@@ -1,13 +1,12 @@
 <!-- Side Menu -->
 <ion-menu contentId="main-content" type="overlay">
   <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Profile</ion-title>
+    <ion-toolbar  color="primary">
+      <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-content>
-    <!-- User Profile Section -->
     <div class="user-profile">
       <div class="avatar-container">
         <ion-avatar>
@@ -28,6 +27,16 @@
       </ion-item>
 
       <ion-item button detail="false" lines="none">
+        <ion-icon name="cart-outline" slot="start"></ion-icon>
+        <ion-label>My Orders</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none">
+        <ion-icon name="heart-outline" slot="start"></ion-icon>
+        <ion-label>Favorites</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none">
         <ion-icon name="person-outline" slot="start"></ion-icon>
         <ion-label>Profile</ion-label>
       </ion-item>
@@ -35,11 +44,6 @@
       <ion-item button detail="false" lines="none">
         <ion-icon name="settings-outline" slot="start"></ion-icon>
         <ion-label>Settings</ion-label>
-      </ion-item>
-
-      <ion-item button detail="false" lines="none">
-        <ion-icon name="notifications-outline" slot="start"></ion-icon>
-        <ion-label>Notifications</ion-label>
       </ion-item>
 
       <ion-item button detail="false" lines="none">
@@ -66,105 +70,238 @@
       <ion-buttons slot="start">
         <ion-menu-button auto-hide="false"></ion-menu-button>
       </ion-buttons>
-      <ion-title>Dashboard</ion-title>
+      <ion-title>Marketplace</ion-title>
       <ion-buttons slot="end">
         <ion-button>
-          <ion-icon name="notifications-outline"></ion-icon>
+          <ion-badge color="danger" class="cart-badge">3</ion-badge>
+          <ion-icon name="cart-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
+    </ion-toolbar>
+
+    <!-- Search Bar -->
+    <ion-toolbar>
+      <ion-searchbar
+        placeholder="Search products..."
+        animated="true"
+        [(ngModel)]="searchQuery">
+      </ion-searchbar>
     </ion-toolbar>
   </ion-header>
 
   <ion-content [fullscreen]="true">
-    <!-- Welcome Section -->
-    <div class="welcome-section">
-      <h1>Welcome back, {{ user?.username }}!</h1>
-      <p>Here's what's happening today</p>
+    <!-- Categories Section -->
+    <div class="categories-section">
+      <h3 class="section-title">Categories</h3>
+      <div class="categories-scroll">
+        <ion-chip color="primary">
+          <ion-icon name="laptop-outline"></ion-icon>
+          <ion-label>Electronics</ion-label>
+        </ion-chip>
+        <ion-chip>
+          <ion-icon name="shirt-outline"></ion-icon>
+          <ion-label>Fashion</ion-label>
+        </ion-chip>
+        <ion-chip>
+          <ion-icon name="home-outline"></ion-icon>
+          <ion-label>Home</ion-label>
+        </ion-chip>
+        <ion-chip>
+          <ion-icon name="book-outline"></ion-icon>
+          <ion-label>Books</ion-label>
+        </ion-chip>
+        <ion-chip>
+          <ion-icon name="basketball-outline"></ion-icon>
+          <ion-label>Sports</ion-label>
+        </ion-chip>
+      </div>
     </div>
 
-    <!-- Stats Cards -->
-    <div class="stats-container">
-      <ion-card class="stat-card">
-        <ion-card-content>
-          <ion-icon name="cube-outline" class="stat-icon"></ion-icon>
-          <h2>124</h2>
-          <p>Total Projects</p>
-        </ion-card-content>
-      </ion-card>
-
-      <ion-card class="stat-card">
-        <ion-card-content>
-          <ion-icon name="checkmark-circle-outline" class="stat-icon"></ion-icon>
-          <h2>89</h2>
-          <p>Completed</p>
-        </ion-card-content>
-      </ion-card>
-
-      <ion-card class="stat-card">
-        <ion-card-content>
-          <ion-icon name="time-outline" class="stat-icon"></ion-icon>
-          <h2>35</h2>
-          <p>Pending</p>
-        </ion-card-content>
-      </ion-card>
-    </div>
-
-    <!-- Recent Activity -->
-    <div class="section-container">
-      <h3 class="section-title">Recent Activity</h3>
-
-      <ion-card class="activity-card">
-        <ion-item lines="none">
-          <ion-icon name="document-text-outline" slot="start" color="primary"></ion-icon>
-          <ion-label>
-            <h2>New document created</h2>
-            <p>2 hours ago</p>
-          </ion-label>
-        </ion-item>
-      </ion-card>
-
-      <ion-card class="activity-card">
-        <ion-item lines="none">
-          <ion-icon name="people-outline" slot="start" color="success"></ion-icon>
-          <ion-label>
-            <h2>Team meeting scheduled</h2>
-            <p>5 hours ago</p>
-          </ion-label>
-        </ion-item>
-      </ion-card>
-
-      <ion-card class="activity-card">
-        <ion-item lines="none">
-          <ion-icon name="chatbubbles-outline" slot="start" color="tertiary"></ion-icon>
-          <ion-label>
-            <h2>3 new messages</h2>
-            <p>1 day ago</p>
-          </ion-label>
-        </ion-item>
+    <!-- Featured Banner -->
+    <div class="featured-banner">
+      <ion-card class="banner-card">
+        <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&h=400&fit=crop" alt="Featured">
+        <div class="banner-content">
+          <h2>Special Offer</h2>
+          <p>Up to 50% off on selected items</p>
+          <ion-button size="small" color="light">Shop Now</ion-button>
+        </div>
       </ion-card>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="section-container">
-      <h3 class="section-title">Quick Actions</h3>
-
-      <div class="quick-actions">
-        <ion-button expand="block" color="primary">
-          <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-          New Project
+    <!-- Products Grid -->
+    <div class="products-section">
+      <div class="section-header">
+        <h3 class="section-title">Featured Products</h3>
+        <ion-button fill="clear" size="small">
+          See All
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
         </ion-button>
+      </div>
 
-        <ion-button expand="block" color="secondary">
-          <ion-icon name="folder-open-outline" slot="start"></ion-icon>
-          Browse Files
-        </ion-button>
+      <div class="products-grid">
+        <!-- Product Card 1 -->
+        <ion-card class="product-card" button>
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop" alt="Product">
+            <ion-button class="wishlist-btn" fill="clear" size="small">
+              <ion-icon name="heart-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <ion-card-content>
+            <h4>Wireless Headphones</h4>
+            <div class="rating">
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star-half" color="warning"></ion-icon>
+              <span>(4.5)</span>
+            </div>
+            <div class="price-section">
+              <span class="price">$79.99</span>
+              <ion-button size="small" fill="solid">
+                <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Product Card 2 -->
+        <ion-card class="product-card" button>
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop" alt="Product">
+            <ion-button class="wishlist-btn" fill="clear" size="small">
+              <ion-icon name="heart-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <ion-card-content>
+            <h4>Smart Watch Pro</h4>
+            <div class="rating">
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star-outline" color="warning"></ion-icon>
+              <span>(4.0)</span>
+            </div>
+            <div class="price-section">
+              <span class="price">$199.99</span>
+              <ion-button size="small" fill="solid">
+                <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Product Card 3 -->
+        <ion-card class="product-card" button>
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=400&fit=crop" alt="Product">
+            <ion-button class="wishlist-btn" fill="clear" size="small">
+              <ion-icon name="heart-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <ion-card-content>
+            <h4>Designer Sunglasses</h4>
+            <div class="rating">
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <span>(5.0)</span>
+            </div>
+            <div class="price-section">
+              <span class="price">$129.99</span>
+              <ion-button size="small" fill="solid">
+                <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Product Card 4 -->
+        <ion-card class="product-card" button>
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&h=400&fit=crop" alt="Product">
+            <ion-button class="wishlist-btn" fill="clear" size="small">
+              <ion-icon name="heart-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <ion-card-content>
+            <h4>Running Shoes</h4>
+            <div class="rating">
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star-half" color="warning"></ion-icon>
+              <span>(4.6)</span>
+            </div>
+            <div class="price-section">
+              <span class="price">$89.99</span>
+              <ion-button size="small" fill="solid">
+                <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Product Card 5 -->
+        <ion-card class="product-card" button>
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400&h=400&fit=crop" alt="Product">
+            <ion-button class="wishlist-btn" fill="clear" size="small">
+              <ion-icon name="heart-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <ion-card-content>
+            <h4>Leather Backpack</h4>
+            <div class="rating">
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star-outline" color="warning"></ion-icon>
+              <span>(4.2)</span>
+            </div>
+            <div class="price-section">
+              <span class="price">$149.99</span>
+              <ion-button size="small" fill="solid">
+                <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Product Card 6 -->
+        <ion-card class="product-card" button>
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=400&fit=crop" alt="Product">
+            <ion-button class="wishlist-btn" fill="clear" size="small">
+              <ion-icon name="heart-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <ion-card-content>
+            <h4>Smart Speaker</h4>
+            <div class="rating">
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <ion-icon name="star" color="warning"></ion-icon>
+              <span>(4.8)</span>
+            </div>
+            <div class="price-section">
+              <span class="price">$59.99</span>
+              <ion-button size="small" fill="solid">
+                <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
       </div>
     </div>
   </ion-content>
-
-  <ion-footer>
-    <ion-toolbar>
-      <ion-title class="footer-text">© 2025 Your App Name</ion-title>
-    </ion-toolbar>
-  </ion-footer>
 </div>
