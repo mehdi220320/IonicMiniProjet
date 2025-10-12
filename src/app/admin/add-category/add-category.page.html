@@ -1,0 +1,246 @@
+<!-- Side Menu -->
+<ion-menu contentId="main-content" type="overlay">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Admin Panel</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <div class="admin-profile">
+      <div class="avatar-container">
+        <ion-avatar>
+          <ion-icon name="shield-checkmark" class="avatar-icon"></ion-icon>
+        </ion-avatar>
+      </div>
+      <h2 class="admin-name">{{ admin?.username || 'Admin' }}</h2>
+      <p class="admin-email">{{ admin?.email || 'admin@marketplace.com' }}</p>
+      <ion-badge color="warning" class="admin-role">
+        <ion-icon name="star" slot="start"></ion-icon>
+        ADMINISTRATOR
+      </ion-badge>
+    </div>
+
+    <ion-list class="menu-list">
+      <ion-item button detail="false" lines="none" routerLink="admin" [class.active]="currentPage === ''">
+        <ion-icon name="grid-outline" slot="start"></ion-icon>
+        <ion-label>Dashboard</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none" (click)="navigateTo('add-product')" [class.active]="currentPage === 'add-product'">
+        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+        <ion-label>Add Product</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none" (click)="navigateTo('add-category')" [class.active]="currentPage === 'add-category'">
+        <ion-icon name="pricetags-outline" slot="start"></ion-icon>
+        <ion-label>Add Category</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none" (click)="navigateTo('users')" [class.active]="currentPage === 'users'">
+        <ion-icon name="people-outline" slot="start"></ion-icon>
+        <ion-label>All Users</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none" (click)="navigateTo('orders')" [class.active]="currentPage === 'orders'">
+        <ion-icon name="receipt-outline" slot="start"></ion-icon>
+        <ion-label>Orders Management</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none" (click)="navigateTo('settings')" [class.active]="currentPage === 'settings'">
+        <ion-icon name="settings-outline" slot="start"></ion-icon>
+        <ion-label>Settings</ion-label>
+      </ion-item>
+    </ion-list>
+
+    <div class="menu-footer">
+      <ion-menu-toggle>
+        <ion-button expand="block" color="danger" (click)="logout()">
+          <ion-icon name="log-out-outline" slot="start"></ion-icon>
+          Logout
+        </ion-button>
+      </ion-menu-toggle>
+    </div>
+  </ion-content>
+</ion-menu>
+
+<!-- Main Content -->
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button auto-hide="false"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Add Category</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="navigateTo('dashboard')">
+          <ion-icon name="home-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-icon">
+        <ion-icon name="pricetags"></ion-icon>
+      </div>
+      <h1>Create New Category</h1>
+      <p>Add a new category to organize your marketplace products</p>
+    </div>
+
+    <!-- Category Form -->
+    <div class="form-container">
+      <ion-card class="form-card">
+        <ion-card-content>
+          <form #categoryForm="ngForm" (ngSubmit)="onSubmit()">
+
+            <!-- Category Name -->
+            <div class="form-group">
+              <ion-label class="form-label">
+                Category Name <span class="required">*</span>
+              </ion-label>
+              <ion-input
+                type="text"
+                [(ngModel)]="category.name"
+                name="name"
+                placeholder="e.g., Electronics, Fashion, Books"
+                required
+                class="custom-input"
+                [class.error]="categoryForm.submitted && !category.name">
+              </ion-input>
+              <div class="error-message" *ngIf="categoryForm.submitted && !category.name">
+                <ion-icon name="alert-circle"></ion-icon>
+                <span>Category name is required</span>
+              </div>
+            </div>
+
+            <!-- Icon Selection -->
+            <div class="form-group">
+              <ion-label class="form-label">
+                Category Icon <span class="required">*</span>
+              </ion-label>
+              <p class="form-hint">Select an icon to represent this category</p>
+
+              <div class="icon-grid">
+                <div
+                  *ngFor="let iconOption of availableIcons"
+                  class="icon-option"
+                  [class.selected]="category.icon === iconOption.value"
+                  (click)="selectIcon(iconOption.value)">
+                  <div class="icon-wrapper">
+                    <ion-icon [name]="iconOption.value"></ion-icon>
+                  </div>
+                  <span class="icon-name">{{ iconOption.label }}</span>
+                </div>
+              </div>
+
+              <div class="error-message" *ngIf="categoryForm.submitted && !category.icon">
+                <ion-icon name="alert-circle"></ion-icon>
+                <span>Please select an icon</span>
+              </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="form-group preview-section" *ngIf="category.name || category.icon">
+              <ion-label class="form-label">Preview</ion-label>
+              <div class="category-preview">
+                <ion-chip color="primary" class="preview-chip">
+                  <ion-icon [name]="category.icon || 'help-outline'"></ion-icon>
+                  <ion-label>{{ category.name || 'Category Name' }}</ion-label>
+                </ion-chip>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+              <ion-button
+                expand="block"
+                type="submit"
+                [disabled]="isSubmitting"
+                class="submit-btn">
+                <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+                {{ isSubmitting ? 'Creating...' : 'Create Category' }}
+              </ion-button>
+
+              <ion-button
+                expand="block"
+                fill="outline"
+                color="medium"
+                (click)="resetForm()"
+                [disabled]="isSubmitting"
+                class="reset-btn">
+                <ion-icon name="refresh" slot="start"></ion-icon>
+                Reset Form
+              </ion-button>
+            </div>
+          </form>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Existing Categories -->
+      <ion-card class="categories-list-card">
+        <ion-card-header>
+          <div class="card-header-content">
+            <ion-card-title>Existing Categories</ion-card-title>
+            <ion-badge color="primary">{{ categories.length }}</ion-badge>
+          </div>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="categories-list" *ngIf="categories.length > 0; else noCategories">
+            <div
+              *ngFor="let cat of categories"
+              class="category-item">
+              <div class="category-info">
+                <div class="category-icon">
+                  <ion-icon [name]="cat.icon"></ion-icon>
+                </div>
+                <div class="category-details">
+                  <h4>{{ cat.name }}</h4>
+                  <p *ngIf="cat.createdAt">Created: {{ cat.createdAt | date:'short' }}</p>
+                </div>
+              </div>
+              <div class="category-actions">
+                <ion-button fill="clear" size="small" (click)="editCategory(cat)">
+                  <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" size="small" color="danger" (click)="deleteCategory(cat)">
+                  <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noCategories>
+            <div class="empty-state">
+              <ion-icon name="folder-open-outline"></ion-icon>
+              <p>No categories yet</p>
+              <span>Create your first category above</span>
+            </div>
+          </ng-template>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ion-content>
+
+  <!-- Footer Navigation -->
+  <ion-footer>
+    <ion-toolbar>
+      <div class="footer-nav">
+        <ion-button class="footer-btn" (click)="navigateTo('dashboard')">
+          <ion-icon name="grid-outline"></ion-icon>
+          <span>Dashboard</span>
+        </ion-button>
+        <ion-button class="footer-btn" (click)="navigateTo('products')">
+          <ion-icon name="cube-outline"></ion-icon>
+          <span>Products</span>
+        </ion-button>
+        <ion-button class="footer-btn active" (click)="navigateTo('categories')">
+          <ion-icon name="pricetags-outline"></ion-icon>
+          <span>Categories</span>
+        </ion-button>
+      </div>
+    </ion-toolbar>
+  </ion-footer>
+</div>

@@ -1,0 +1,335 @@
+<!-- Side Menu -->
+<ion-menu contentId="main-content" type="overlay">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Admin Panel</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <div class="admin-profile">
+      <div class="avatar-container">
+        <ion-avatar>
+          <ion-icon name="shield-checkmark" class="avatar-icon"></ion-icon>
+        </ion-avatar>
+      </div>
+      <h2 class="admin-name">{{ admin?.username || 'Admin' }}</h2>
+      <p class="admin-email">{{ admin?.email || 'admin@marketplace.com' }}</p>
+      <ion-badge color="warning" class="admin-role">
+        <ion-icon name="star" slot="start"></ion-icon>
+        ADMINISTRATOR
+      </ion-badge>
+    </div>
+
+    <ion-list class="menu-list">
+      <ion-item button detail="false" lines="none" (click)="navigateTo('dashboard')" [class.active]="currentPage === 'dashboard'">
+        <ion-icon name="grid-outline" slot="start"></ion-icon>
+        <ion-label>Dashboard</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none" (click)="navigateTo('add-product')" [class.active]="currentPage === 'add-product'">
+        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+        <ion-label>Add Product</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none" (click)="navigateTo('add-category')" [class.active]="currentPage === 'add-category'">
+        <ion-icon name="pricetags-outline" slot="start"></ion-icon>
+        <ion-label>Add Category</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none" (click)="navigateTo('users')" [class.active]="currentPage === 'users'">
+        <ion-icon name="people-outline" slot="start"></ion-icon>
+        <ion-label>All Users</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none" (click)="navigateTo('orders')" [class.active]="currentPage === 'orders'">
+        <ion-icon name="receipt-outline" slot="start"></ion-icon>
+        <ion-label>Orders Management</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none" (click)="navigateTo('settings')" [class.active]="currentPage === 'settings'">
+        <ion-icon name="settings-outline" slot="start"></ion-icon>
+        <ion-label>Settings</ion-label>
+      </ion-item>
+    </ion-list>
+
+    <div class="menu-footer">
+      <ion-menu-toggle>
+        <ion-button expand="block" color="danger" (click)="logout()">
+          <ion-icon name="log-out-outline" slot="start"></ion-icon>
+          Logout
+        </ion-button>
+      </ion-menu-toggle>
+    </div>
+  </ion-content>
+</ion-menu>
+
+<!-- Main Content -->
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button auto-hide="false"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Admin Dashboard</ion-title>
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-badge color="danger" class="notification-badge">5</ion-badge>
+          <ion-icon name="notifications-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+    <!-- Statistics Cards -->
+    <div class="stats-section">
+      <ion-card class="stat-card revenue">
+        <ion-card-content>
+          <div class="stat-icon">
+            <ion-icon name="trending-up"></ion-icon>
+          </div>
+          <div class="stat-info">
+            <p class="stat-label">Total Revenue</p>
+            <h2 class="stat-value">$45,890</h2>
+            <span class="stat-change positive">
+              <ion-icon name="arrow-up"></ion-icon>
+              12.5% from last month
+            </span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card orders">
+        <ion-card-content>
+          <div class="stat-icon">
+            <ion-icon name="cart"></ion-icon>
+          </div>
+          <div class="stat-info">
+            <p class="stat-label">Total Orders</p>
+            <h2 class="stat-value">1,247</h2>
+            <span class="stat-change positive">
+              <ion-icon name="arrow-up"></ion-icon>
+              8.3% from last month
+            </span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card products">
+        <ion-card-content>
+          <div class="stat-icon">
+            <ion-icon name="cube"></ion-icon>
+          </div>
+          <div class="stat-info">
+            <p class="stat-label">Total Product</p>
+            <h2 class="stat-value">384</h2>
+            <span class="stat-change neutral">
+              <ion-icon name="remove"></ion-icon>
+              No change
+            </span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card users">
+        <ion-card-content>
+          <div class="stat-icon">
+            <ion-icon name="people"></ion-icon>
+          </div>
+          <div class="stat-info">
+            <p class="stat-label">Total Users</p>
+            <h2 class="stat-value">2,856</h2>
+            <span class="stat-change positive">
+              <ion-icon name="arrow-up"></ion-icon>
+              15.2% from last month
+            </span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+      <ion-card class="chart-card">
+        <ion-card-header>
+          <div class="card-header-content">
+            <ion-card-title>Sales Overview</ion-card-title>
+            <ion-select value="month" interface="popover">
+              <ion-select-option value="week">This Week</ion-select-option>
+              <ion-select-option value="month">This Month</ion-select-option>
+              <ion-select-option value="year">This Year</ion-select-option>
+            </ion-select>
+          </div>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="chart-placeholder">
+            <canvas id="salesChart"></canvas>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="chart-card">
+        <ion-card-header>
+          <ion-card-title>Category Distribution</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="category-stats">
+            <div class="category-item">
+              <div class="category-info">
+                <ion-icon name="laptop-outline" color="primary"></ion-icon>
+                <span>Electronics</span>
+              </div>
+              <div class="category-progress">
+                <ion-progress-bar value="0.65" color="primary"></ion-progress-bar>
+                <span class="percentage">65%</span>
+              </div>
+            </div>
+            <div class="category-item">
+              <div class="category-info">
+                <ion-icon name="shirt-outline" color="secondary"></ion-icon>
+                <span>Fashion</span>
+              </div>
+              <div class="category-progress">
+                <ion-progress-bar value="0.45" color="secondary"></ion-progress-bar>
+                <span class="percentage">45%</span>
+              </div>
+            </div>
+            <div class="category-item">
+              <div class="category-info">
+                <ion-icon name="home-outline" color="tertiary"></ion-icon>
+                <span>Home & Living</span>
+              </div>
+              <div class="category-progress">
+                <ion-progress-bar value="0.38" color="tertiary"></ion-progress-bar>
+                <span class="percentage">38%</span>
+              </div>
+            </div>
+            <div class="category-item">
+              <div class="category-info">
+                <ion-icon name="basketball-outline" color="success"></ion-icon>
+                <span>Sports</span>
+              </div>
+              <div class="category-progress">
+                <ion-progress-bar value="0.28" color="success"></ion-progress-bar>
+                <span class="percentage">28%</span>
+              </div>
+            </div>
+            <div class="category-item">
+              <div class="category-info">
+                <ion-icon name="book-outline" color="warning"></ion-icon>
+                <span>Books</span>
+              </div>
+              <div class="category-progress">
+                <ion-progress-bar value="0.20" color="warning"></ion-progress-bar>
+                <span class="percentage">20%</span>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Recent Orders Section -->
+    <div class="recent-section">
+      <ion-card>
+        <ion-card-header>
+          <div class="card-header-content">
+            <ion-card-title>Recent Orders</ion-card-title>
+            <ion-button fill="clear" size="small" (click)="navigateTo('orders')">
+              View All
+              <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="orders-table">
+            <div class="order-row header-row">
+              <span>Order ID</span>
+              <span>Customer</span>
+              <span>Product</span>
+              <span>Amount</span>
+              <span>Status</span>
+              <span>Action</span>
+            </div>
+
+            <div class="order-row">
+              <span class="order-id">#ORD-1247</span>
+              <span>John Doe</span>
+              <span>Wireless Headphones</span>
+              <span class="amount">$79.99</span>
+              <ion-badge color="success">Delivered</ion-badge>
+              <ion-button fill="clear" size="small">
+                <ion-icon name="eye-outline"></ion-icon>
+              </ion-button>
+            </div>
+
+            <div class="order-row">
+              <span class="order-id">#ORD-1246</span>
+              <span>Sarah Smith</span>
+              <span>Smart Watch Pro</span>
+              <span class="amount">$199.99</span>
+              <ion-badge color="warning">Pending</ion-badge>
+              <ion-button fill="clear" size="small">
+                <ion-icon name="eye-outline"></ion-icon>
+              </ion-button>
+            </div>
+
+            <div class="order-row">
+              <span class="order-id">#ORD-1245</span>
+              <span>Mike Johnson</span>
+              <span>Designer Sunglasses</span>
+              <span class="amount">$129.99</span>
+              <ion-badge color="primary">Shipped</ion-badge>
+              <ion-button fill="clear" size="small">
+                <ion-icon name="eye-outline"></ion-icon>
+              </ion-button>
+            </div>
+
+            <div class="order-row">
+              <span class="order-id">#ORD-1244</span>
+              <span>Emma Wilson</span>
+              <span>Running Shoes</span>
+              <span class="amount">$89.99</span>
+              <ion-badge color="success">Delivered</ion-badge>
+              <ion-button fill="clear" size="small">
+                <ion-icon name="eye-outline"></ion-icon>
+              </ion-button>
+            </div>
+
+            <div class="order-row">
+              <span class="order-id">#ORD-1243</span>
+              <span>David Brown</span>
+              <span>Leather Backpack</span>
+              <span class="amount">$149.99</span>
+              <ion-badge color="danger">Cancelled</ion-badge>
+              <ion-button fill="clear" size="small">
+                <ion-icon name="eye-outline"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ion-content>
+
+  <!-- Footer Navigation -->
+  <ion-footer>
+    <ion-toolbar>
+      <div class="footer-nav">
+        <ion-button class="footer-btn active" (click)="navigateTo('dashboard')">
+          <ion-icon name="grid-outline"></ion-icon>
+          <span>Dashboard</span>
+        </ion-button>
+        <ion-button class="footer-btn" (click)="navigateTo('products')">
+          <ion-icon name="cube-outline"></ion-icon>
+          <span>Product</span>
+        </ion-button>
+        <ion-button class="footer-btn" (click)="navigateTo('categories')">
+          <ion-icon name="pricetags-outline"></ion-icon>
+          <span>Categories</span>
+        </ion-button>
+      </div>
+    </ion-toolbar>
+  </ion-footer>
+</div>
