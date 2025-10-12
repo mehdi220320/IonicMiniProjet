@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {AuthService} from "../services/auth-service";
 import {Router} from "@angular/router";
 import {AlertController, MenuController, ToastController} from "@ionic/angular";
@@ -33,7 +33,7 @@ interface CategoryStat {
   styleUrls: ['./admin.page.scss'],
   standalone:false,
 })
-export class AdminPage implements OnInit {
+export class AdminPage  {
 
   admin: User | null = null;
   currentPage: string = 'dashboard';
@@ -153,19 +153,19 @@ export class AdminPage implements OnInit {
       value: 20
     }
   ];
-
+  private authService = inject(AuthService)
+  private router= inject(Router)
+  private menuCtrl= inject( MenuController)
+  private alertController= inject( AlertController)
+  private toastController= inject( ToastController)
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    private menuCtrl: MenuController,
-    private alertController: AlertController,
-    private toastController: ToastController
+
   ) {}
 
-  async ngOnInit() {
+  //async ngOnInit() {
     //await this.loadAdminData();
     //await this.checkAdminRole();
-  }
+  //}
 
   async ionViewWillEnter() {
     await this.loadAdminData();

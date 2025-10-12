@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AlertController, LoadingController} from "@ionic/angular";
 import {Router} from "@angular/router";
@@ -10,16 +10,16 @@ import {AuthService} from "../services/auth-service";
   standalone:false,
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage  {
   loginForm: FormGroup;
   isLoading = false;
-
+  private formBuilder = inject(FormBuilder);
+  private router = inject(Router);
+  private loadingCtrl = inject(LoadingController);
+  private alertCtrl = inject(AlertController);
+  private authService = inject(AuthService);
   constructor(
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController,
-    private authService: AuthService
+
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -27,7 +27,6 @@ export class LoginPage implements OnInit {
     });
   }
 
-  ngOnInit() {}
 
   async onLogin() {
     if (this.loginForm.valid) {

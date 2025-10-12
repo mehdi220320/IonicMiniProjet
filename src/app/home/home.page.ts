@@ -15,10 +15,8 @@ import {FormsModule} from "@angular/forms";
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   imports: [
-    // Angular modules
     FormsModule,
 
-    // Ionic standalone components
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -34,11 +32,8 @@ import {FormsModule} from "@angular/forms";
     IonCard,
     IonCardContent,
     IonSpinner,
-    IonMenu,
-    IonAvatar,
-    IonItem,
-    IonList,
-    IonMenuToggle
+
+
   ]
 })
 export class HomePage {

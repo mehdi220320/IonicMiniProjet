@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage-angular';
@@ -10,11 +10,11 @@ import { User, UserRole } from '../models/User';
 export class AuthService {
   private _storage: Storage | null = null;
   private currentUser: User | null = null;
-
+  private auth= inject(Auth)
+  private firestore= inject(Firestore)
+  private storage=inject( Storage)
   constructor(
-    private auth: Auth,
-    private firestore: Firestore,
-    private storage: Storage
+
   ) {
     this.init();
   }
