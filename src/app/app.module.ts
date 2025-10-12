@@ -9,8 +9,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { IonicStorageModule } from '@ionic/storage-angular';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore'; // ✅ ADD THIS
-
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import {CloudinaryModule} from '@cloudinary/ng';
 import { environment } from './models/environment';
 
 @NgModule({
@@ -19,7 +19,8 @@ import { environment } from './models/environment';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    CloudinaryModule
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),

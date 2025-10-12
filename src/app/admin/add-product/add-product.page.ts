@@ -1,20 +1,22 @@
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
-import {NgForm} from "@angular/forms";
-import {ProductService} from "../../services/productService";
-import {CategoryService} from "../../services/category-service";
-import {AuthService} from "../../services/auth-service";
-import {AlertController, MenuController, ToastController} from "@ionic/angular";
-import {Router} from "@angular/router";
-import {User, UserRole} from "../../models/User";
-import {Product} from "../../models/Product";
-import {Category} from "../../models/Category";
-import {Camera, CameraResultType, CameraSource} from "@capacitor/camera";
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from "@angular/forms";
+import { ProductService } from "../../services/productService";
+import { CategoryService } from "../../services/category-service";
+import { AuthService } from "../../services/auth-service";
+import { AlertController, MenuController, ToastController } from "@ionic/angular";
+import { Router } from "@angular/router";
+import { User, UserRole } from "../../models/User";
+import { Product } from "../../models/Product";
+import { Category } from "../../models/Category";
+import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.page.html',
   styleUrls: ['./add-product.page.scss'],
-  standalone:false
+  standalone: false
 })
 export class AddProductPage implements OnInit {
 
@@ -45,226 +47,276 @@ export class AddProductPage implements OnInit {
   };
 
   ngOnInit(): void {
-  //  this.loadAdminData();
     this.loadCategories();
     this.loadProducts();
-   // this.checkAdminRole();
   }
 
   ionViewWillEnter() {
-  //  this.loadAdminData();
     this.loadCategories();
     this.loadProducts();
   }
 
-  /**
-   * Load admin user data
-   */
-  loadAdminData() {
-    this.authService.getCurrentUser().then(user => {
-      this.admin = user;
-      if (!this.admin) {
-        this.showToast('Please login to access admin panel', 'warning');
-        this.router.navigate(['/login']);
-      }
-    }).catch(error => {
-      console.error('Error loading admin data:', error);
-      this.showToast('Error loading user data', 'danger');
-    });
-  }
-
-  /**
-   * Check if user has admin role
-   */
-  checkAdminRole() {
-    this.authService.getCurrentUserRole().then(role => {
-      if (role !== UserRole.ADMIN) {
-        this.showAlert(
-          'Access Denied',
-          'You do not have permission to access this page.',
-          () => this.router.navigate(['/home'])
-        );
-      }
-    });
-  }
-
-  /**
-   * Load all categories
-   */
   loadCategories() {
     this.categoryService.getAllCategories().subscribe({
-      next: (categories) => {
-        this.categories = categories;
-      },
-      error: (error) => {
-        console.error('Error loading categories:', error);
-        this.showToast('Error loading categories', 'danger');
-      }
+      next: (categories) => this.categories = categories,
+      error: (err) => this.showToast('Error loading categories', 'danger')
     });
   }
 
-  /**
-   * Load all products
-   */
+
   loadProducts() {
     this.productService.getAllProducts().subscribe({
-      next: (products) => {
-        this.products = products.sort((a, b) => {
-          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-          return dateB - dateA;
-        });
-      },
-      error: (error) => {
-        console.error('Error loading products:', error);
-        this.showToast('Error loading products', 'danger');
-      }
+      next: (products) => this.products = products.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      }),
+      error: (err) => this.showToast('Error loading products', 'danger')
     });
   }
 
-  /**
-   * Take picture with camera
-   */
-  takePicture() {
-    Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.Uri,
-      source: CameraSource.Camera
-    }).then(image => {
+
+  async takePicture() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Uri,
+        source: CameraSource.Camera
+      });
       this.product.imageUri = image.webPath || '';
-    }).catch(error => {
+    } catch (error: any) {
       console.error('Error taking picture:', error);
       if (error.message !== 'User cancelled photos app') {
         this.showToast('Error taking picture', 'danger');
       }
-    });
+    }
   }
 
-  /**
-   * Pick image from gallery
-   */
-  pickFromGallery() {
-    Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.Uri,
-      source: CameraSource.Photos
-    }).then(image => {
+  async pickFromGallery() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Uri,
+        source: CameraSource.Photos
+      });
       this.product.imageUri = image.webPath || '';
-    }).catch(error => {
+    } catch (error: any) {
       console.error('Error picking image:', error);
       if (error.message !== 'User cancelled photos app') {
         this.showToast('Error picking image', 'danger');
       }
-    });
+    }
   }
 
-  /**
-   * Remove selected image
-   */
-  removeImage() {
-    this.product.imageUri = '';
-  }
+  private async uploadToCloudinary(fileUri: string): Promise<string> {
+    try {
+      let blob: Blob;
 
-  /**
-   * Handle category change
-   */
-  onCategoryChange() {
-    const selectedCategory = this.categories.find(cat => cat.id === this.selectedCategoryId);
-    if (selectedCategory) {
-      this.product.category = selectedCategory;
+      // Handle different URI types based on platform
+      if (Capacitor.isNativePlatform() && fileUri.startsWith('file://')) {
+        // For native mobile (iOS/Android) - convert file:// to blob
+        const base64Data = await this.readFileAsBase64(fileUri);
+        blob = this.base64ToBlob(base64Data, 'image/jpeg');
+      } else if (fileUri.startsWith('blob:') || fileUri.startsWith('http')) {
+        // For web or already accessible URIs
+        const response = await fetch(fileUri);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch image: ${response.statusText}`);
+        }
+        blob = await response.blob();
+      } else {
+        throw new Error(`Unsupported URI format: ${fileUri}`);
+      }
+
+      // Verify blob
+      if (!blob || blob.size === 0) {
+        throw new Error('Invalid or empty image file');
+      }
+
+      console.log('Blob created:', { size: blob.size, type: blob.type });
+
+      // Create FormData
+      const formData = new FormData();
+      formData.append('file', blob, 'image.jpg'); // Add filename
+      // Replace with your actual upload preset name from Cloudinary dashboard
+      // To find it: Cloudinary Console → Settings → Upload → Upload presets
+      formData.append('upload_preset', 'ionic_unsigned');
+
+      // Optional: Add more parameters
+      // formData.append('folder', 'products');
+      // formData.append('public_id', `product_${Date.now()}`);
+      // formData.append('tags', 'product,ionic');
+
+      const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dqqegvzt4/image/upload';
+
+      console.log('Uploading to Cloudinary...');
+
+      const uploadResponse = await fetch(cloudinaryUrl, {
+        method: 'POST',
+        body: formData,
+        // Don't set Content-Type header - let browser set it with boundary
+      });
+
+      console.log('Upload response status:', uploadResponse.status);
+
+      if (!uploadResponse.ok) {
+        const errorText = await uploadResponse.text();
+        console.error('Cloudinary error response:', errorText);
+        throw new Error(`Cloudinary upload failed: ${uploadResponse.status} - ${errorText}`);
+      }
+
+      const data = await uploadResponse.json();
+      console.log('Cloudinary response:', data);
+
+      if (data.secure_url) {
+        return data.secure_url;
+      } else if (data.url) {
+        return data.url;
+      } else {
+        throw new Error('No URL returned from Cloudinary');
+      }
+    } catch (error) {
+      console.error('Cloudinary upload error:', error);
+      throw error;
     }
   }
 
   /**
-   * Submit form to create or update product
+   * Helper: Read file as base64 for native platforms
    */
-  onSubmit() {
+  private async readFileAsBase64(fileUri: string): Promise<string> {
+    try {
+      // Remove file:// prefix if present
+      const path = fileUri.replace('file://', '');
+
+      const result = await Filesystem.readFile({
+        path: path
+      });
+
+      return result.data as string;
+    } catch (error) {
+      console.error('Error reading file:', error);
+      throw new Error('Failed to read image file');
+    }
+  }
+
+  /**
+   * Helper: Convert base64 to Blob
+   */
+  private base64ToBlob(base64: string, mimeType: string = 'image/jpeg'): Blob {
+    // Remove data URL prefix if present
+    const base64Data = base64.includes(',') ? base64.split(',')[1] : base64;
+
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mimeType });
+  }
+  /**
+   * Submit form
+   */
+  async onSubmit() {
     if (!this.validateForm()) {
       this.showToast('Please fill all required fields', 'warning');
       return;
     }
 
     this.isSubmitting = true;
-
     if (this.editingProductId) {
-      this.updateExistingProduct();
+      await this.updateExistingProduct();
     } else {
-      this.createNewProduct();
+      await this.createNewProduct();
     }
+    this.isSubmitting = false;
   }
 
-  /**
-   * Validate form
-   */
   private validateForm(): boolean {
     return !!(
       this.product.name &&
       this.product.description &&
       this.product.imageUri &&
-      this.product.price &&
-      this.product.price > 0 &&
+      this.product.price && this.product.price > 0 &&
       this.product.category
     );
   }
 
-  /**
-   * Create new product
-   */
-  private createNewProduct() {
-    const newProduct: Product = {
-      name: this.product.name!,
-      description: this.product.description!,
-      price: this.product.price!,
-      imageUri: this.product.imageUri!,
-      category: this.product.category!,
-      createdAt: new Date()
-    };
+  private async createNewProduct() {
+    try {
+      const imageUrl = await this.uploadToCloudinary(this.product.imageUri!);
 
-    this.productService.addProduct(newProduct).subscribe({
-      next: () => {
-        this.showToast('Product created successfully!', 'success');
-        this.resetForm();
-        this.loadProducts();
-        this.isSubmitting = false;
-      },
-      error: (error) => {
-        console.error('Error creating product:', error);
-        this.showToast('Failed to create product', 'danger');
-        this.isSubmitting = false;
+      const newProduct: Product = {
+        name: this.product.name!,
+        description: this.product.description!,
+        price: this.product.price!,
+        imageUri: imageUrl,
+        category: this.product.category!,
+        createdAt: new Date()
+      };
+
+      this.productService.addProduct(newProduct).subscribe({
+        next: () => {
+          this.showToast('Product created successfully!', 'success');
+          this.resetForm();
+          this.loadProducts();
+        },
+        error: (err) => this.showToast('Failed to create product', 'danger')
+      });
+    } catch (err) {
+      this.showToast('Failed to upload image', 'danger');
+    }
+  }
+
+  private async updateExistingProduct() {
+    if (!this.editingProductId) return;
+
+    try {
+      let imageUrl = this.product.imageUri!;
+      if (!imageUrl.startsWith('http')) {
+        imageUrl = await this.uploadToCloudinary(imageUrl);
       }
-    });
+
+      const updateData: Partial<Product> = {
+        name: this.product.name!,
+        description: this.product.description!,
+        price: this.product.price!,
+        imageUri: imageUrl,
+        category: this.product.category!
+      };
+
+      this.productService.updateProduct(this.editingProductId, updateData).subscribe({
+        next: () => {
+          this.showToast('Product updated successfully!', 'success');
+          this.resetForm();
+          this.loadProducts();
+          this.editingProductId = null;
+        },
+        error: (err) => this.showToast('Failed to update product', 'danger')
+      });
+    } catch (err) {
+      this.showToast('Failed to upload image', 'danger');
+    }
   }
 
   /**
-   * Update existing product
+   * Remove image
    */
-  private updateExistingProduct() {
-    if (!this.editingProductId) return;
+  removeImage() {
+    this.product.imageUri = '';
+  }
 
-    const updateData: Partial<Product> = {
-      name: this.product.name!,
-      description: this.product.description!,
-      price: this.product.price!,
-      imageUri: this.product.imageUri!,
-      category: this.product.category!
-    };
-
-    this.productService.updateProduct(this.editingProductId, updateData).subscribe({
-      next: () => {
-        this.showToast('Product updated successfully!', 'success');
-        this.resetForm();
-        this.loadProducts();
-        this.editingProductId = null;
-        this.isSubmitting = false;
-      },
-      error: (error) => {
-        console.error('Error updating product:', error);
-        this.showToast('Failed to update product', 'danger');
-        this.isSubmitting = false;
-      }
-    });
+  /**
+   * Handle category selection
+   */
+  onCategoryChange() {
+    const selected = this.categories.find(c => c.id === this.selectedCategoryId);
+    if (selected) this.product.category = selected;
   }
 
   /**
@@ -272,95 +324,59 @@ export class AddProductPage implements OnInit {
    */
   editProduct(prod: Product) {
     this.editingProductId = prod.id || null;
-    this.product = {
-      name: prod.name,
-      description: prod.description,
-      price: prod.price,
-      imageUri: prod.imageUri,
-      category: prod.category
-    };
-    this.selectedCategoryId = prod.category.id || '';
-
-    // Scroll to top
+    this.product = { ...prod };
+    this.selectedCategoryId = prod.category?.id || '';
     const content = document.querySelector('ion-content');
-    if (content) {
-      content.scrollToTop(500);
-    }
-
+    if (content) content.scrollToTop(500);
     this.showToast('Editing product', 'primary');
   }
 
   /**
-   * Delete product with confirmation
+   * Delete product
    */
   deleteProduct(prod: Product) {
     this.alertController.create({
       header: 'Confirm Delete',
-      message: `Are you sure you want to delete "${prod.name}"? This action cannot be undone.`,
+      message: `Are you sure you want to delete "${prod.name}"?`,
       buttons: [
+        { text: 'Cancel', role: 'cancel', cssClass: 'secondary' },
         {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary'
-        },
-        {
-          text: 'Delete',
-          cssClass: 'danger',
-          handler: () => {
-            this.performDelete(prod);
-          }
+          text: 'Delete', cssClass: 'danger', handler: () => this.performDelete(prod)
         }
       ]
     }).then(alert => alert.present());
   }
 
-  /**
-   * Perform product deletion
-   */
   private performDelete(prod: Product) {
-    if (!prod.id) {
-      this.showToast('Invalid product ID', 'danger');
-      return;
-    }
+    if (!prod.id) return this.showToast('Invalid product ID', 'danger');
 
     this.productService.deleteProduct(prod.id).subscribe({
       next: () => {
         this.showToast('Product deleted successfully', 'success');
         this.loadProducts();
-
-        if (this.editingProductId === prod.id) {
-          this.resetForm();
-        }
+        if (this.editingProductId === prod.id) this.resetForm();
       },
-      error: (error) => {
-        console.error('Error deleting product:', error);
-        this.showToast('Failed to delete product', 'danger');
-      }
+      error: (err) => this.showToast('Failed to delete product', 'danger')
     });
   }
 
   /**
-   * Reset form to initial state
+   * Reset form
    */
   resetForm() {
-    this.product = {
-      name: '',
-      description: '',
-      price: 0,
-      imageUri: '',
-      category: undefined
-    };
+    this.product = { name: '', description: '', price: 0, imageUri: '', category: undefined };
     this.selectedCategoryId = '';
     this.editingProductId = null;
-
-    if (this.productForm) {
-      this.productForm.resetForm();
-    }
+    if (this.productForm) this.productForm.resetForm();
   }
 
   /**
-   * Navigate to different pages
+   * Toast helper
    */
+  private showToast(message: string, color: string = 'primary') {
+    this.toastController.create({ message, duration: 2000, position: 'bottom', color })
+      .then(toast => toast.present());
+  }
   navigateTo(page: string) {
     this.currentPage = page;
     this.menuCtrl.close();
@@ -394,12 +410,8 @@ export class AddProductPage implements OnInit {
         break;
     }
   }
-
-  /**
-   * Logout with confirmation
-   */
-  logout() {
-    this.alertController.create({
+  async logout() {
+    const alert = await this.alertController.create({
       header: 'Confirm Logout',
       message: 'Are you sure you want to logout?',
       buttons: [
@@ -410,50 +422,22 @@ export class AddProductPage implements OnInit {
         },
         {
           text: 'Logout',
-          handler: () => {
-            this.authService.logout().then(() => {
-              this.showToast('Logged out successfully', 'success');
+          handler: async () => {
+            try {
+              await this.authService.logout();
+              await this.showToast('Logged out successfully', 'success');
               this.router.navigate(['/login']);
-            }).catch(error => {
+            } catch (error) {
               console.error('Logout error:', error);
-              this.showToast('Error logging out', 'danger');
-            });
-          }
-        }
-      ]
-    }).then(alert => alert.present());
-  }
-
-  /**
-   * Show toast notification
-   */
-  private showToast(message: string, color: string = 'primary') {
-    this.toastController.create({
-      message,
-      duration: 2000,
-      position: 'bottom',
-      color
-    }).then(toast => toast.present());
-  }
-
-  /**
-   * Show alert dialog
-   */
-  private showAlert(header: string, message: string, onConfirm?: () => void) {
-    this.alertController.create({
-      header,
-      message,
-      buttons: [
-        {
-          text: 'OK',
-          handler: () => {
-            if (onConfirm) {
-              onConfirm();
+              await this.showToast('Error logging out', 'danger');
             }
           }
         }
       ]
-    }).then(alert => alert.present());
+    });
+
+    await alert.present();
   }
+
 
 }
