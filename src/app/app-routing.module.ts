@@ -23,6 +23,8 @@ const routes: Routes = [
   },
   {
     path: 'admin',
+    canActivate: [AuthGuard],
+    data: { role: 'admin' },
     loadChildren: () => import('./admin/admin.module').then( m => m.AdminPageModule)
   },
   {
@@ -33,7 +35,11 @@ const routes: Routes = [
     path: 'product/:id',
     loadChildren: () =>
       import('./details-prod/details-prod.module').then(m => m.DetailsProdPageModule)
+  },  {
+    path: 'unauthorized',
+    loadChildren: () => import('./unauthorized/unauthorized.module').then( m => m.UnauthorizedPageModule)
   }
+
 ];
 
 @NgModule({

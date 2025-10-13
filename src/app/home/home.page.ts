@@ -23,6 +23,8 @@ import {FormsModule} from "@angular/forms";
     IonContent,
     IonButtons,
     IonMenuButton,
+    IonMenu,
+    IonMenuToggle,
     IonButton,
     IonBadge,
     IonSearchbar,
@@ -32,7 +34,9 @@ import {FormsModule} from "@angular/forms";
     IonCard,
     IonCardContent,
     IonSpinner,
-
+    IonAvatar,
+    IonList,
+    IonItem
 
   ]
 })

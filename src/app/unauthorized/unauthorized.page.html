@@ -1,0 +1,37 @@
+<ion-content class="unauthorized-content">
+  <div class="unauthorized-container">
+    <div class="error-animation">
+      <div class="lock-circle">
+        <ion-icon name="lock-closed-outline" class="lock-icon"></ion-icon>
+      </div>
+      <div class="pulse-ring"></div>
+    </div>
+
+    <ion-card class="error-card">
+      <ion-card-content>
+        <h1 class="error-code">403</h1>
+        <h2 class="error-title">Access Denied</h2>
+        <p class="error-message">
+          You don't have permission to access this resource.
+          Please contact your administrator if you believe this is a mistake.
+        </p>
+
+        <div class="action-buttons">
+          <ion-button expand="block" color="primary" (click)="goBack()">
+            <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+            Go Back
+          </ion-button>
+
+          <ion-button expand="block" fill="outline" color="primary" (click)="goToHome()">
+            <ion-icon name="home-outline" slot="start"></ion-icon>
+            Go to Home
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="footer-text">
+      <p>Need help? Contact support@example.com</p>
+    </div>
+  </div>
+</ion-content>

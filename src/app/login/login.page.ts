@@ -40,7 +40,13 @@ export class LoginPage  {
         const user = await this.authService.login(email, password);
         console.log('Logged in user:', user);
         await loading.dismiss();
-        this.router.navigate(['/home']);
+
+        if(await this.authService.getCurrentUserRole()==="ADMIN"){
+          this.router.navigate(['/admin']);
+        }else {
+          this.router.navigate(['/home']);
+
+        }
       } catch (error: any) {
         await loading.dismiss();
         this.showAlert('Login Failed', error.message || 'Invalid credentials');

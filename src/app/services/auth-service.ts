@@ -3,7 +3,7 @@ import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signO
 import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage-angular';
 import { User, UserRole } from '../models/User';
-
+import { onAuthStateChanged } from '@angular/fire/auth';
 @Injectable({
   providedIn: 'root'
 })
@@ -89,8 +89,14 @@ export class AuthService {
   }
 
   async isLoggedIn(): Promise<boolean> {
-    const user = await this.getUser();
-    return !!user;
+    const storedUser = await this.getUser();
+    if (storedUser) return true;
+    return new Promise((resolve) => {
+      const unsubscribe = onAuthStateChanged(this.auth, (user) => {
+        unsubscribe();
+        resolve(!!user);
+      });
+    });
   }
   async getCurrentUser(): Promise<User | null> {
     const currentUser = this.auth.currentUser;
@@ -121,4 +127,5 @@ export class AuthService {
   async getCurrentUserRole(): Promise<UserRole | null> {
     const user = await this.getCurrentUser();
     return user ? user.role : null;
-  }}
+  }
+}
