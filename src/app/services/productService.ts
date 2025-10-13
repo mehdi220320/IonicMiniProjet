@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {
   Firestore,
   collection,
@@ -15,9 +15,10 @@ import {Product} from "../models/Product";
   providedIn: 'root'
 })
 export class ProductService {
+  private firestore= inject(Firestore)
   private productsCollection = collection(this.firestore, 'products');
 
-  constructor(private firestore: Firestore) {}
+  constructor() {}
 
   getAllProducts(): Observable<Product[]> {
     return collectionData(this.productsCollection, { idField: 'id' }) as Observable<Product[]>;

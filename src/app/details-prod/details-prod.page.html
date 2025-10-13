@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ product?.name || 'Product Details' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+@if (product) {
+  <ion-content>
+    <div class="product-detail-container">
+
+      <!-- Image -->
+      <div class="product-image-wrapper">
+        <img [src]="product.imageUri" alt="Product image" class="product-image" />
+      </div>
+
+      <!-- Info -->
+      <div class="product-info">
+        <h2 class="product-name">{{ product.name }}</h2>
+
+        <div class="product-price">
+          ${{ product.price }}
+        </div>
+
+        <div class="product-rating">
+          <ion-icon name="star" color="warning"></ion-icon>
+          <ion-icon name="star" color="warning"></ion-icon>
+          <ion-icon name="star" color="warning"></ion-icon>
+          <ion-icon name="star" color="warning"></ion-icon>
+          <ion-icon name="star-half" color="warning"></ion-icon>
+          <span>(4.5)</span>
+        </div>
+
+        <p class="product-description">
+          {{ product.description }}
+        </p>
+
+        <div class="product-category">
+          <ion-chip color="tertiary">
+            <ion-icon name="pricetag-outline"></ion-icon>
+            <ion-label>{{ product.category.name || 'General' }}</ion-label>
+          </ion-chip>
+        </div>
+
+        <ion-button expand="block" color="success" size="large">
+          <ion-icon name="cart-outline" slot="start"></ion-icon>
+          Add to Cart
+        </ion-button>
+
+      </div>
+    </div>
+  </ion-content>
+} @else {
+  <ion-content>
+    <div class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  </ion-content>
+}
