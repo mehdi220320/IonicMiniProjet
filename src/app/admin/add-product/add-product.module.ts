@@ -8,6 +8,7 @@ import { AddProductPageRoutingModule } from './add-product-routing.module';
 
 import { AddProductPage } from './add-product.page';
 import {MenuComponent} from "../menu/menu.component";
+import {FooterComponent} from "../footer/footer.component";
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import {MenuComponent} from "../menu/menu.component";
     FormsModule,
     IonicModule,
     AddProductPageRoutingModule,
-    MenuComponent
+    MenuComponent,
+    FooterComponent
   ],
   declarations: [AddProductPage]
 })

@@ -1,0 +1,417 @@
+// ===============================
+// Header
+// ===============================
+ion-header {
+  ion-toolbar {
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+
+    ion-title {
+      font-weight: 600;
+      font-size: 20px;
+    }
+  }
+}
+
+// ===============================
+// Content Wrapper
+// ===============================
+.content-wrapper {
+  padding: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// ===============================
+// Search Section
+// ===============================
+.search-section {
+  margin-bottom: 16px;
+
+  .custom-searchbar {
+    --border-radius: 16px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 0;
+  }
+}
+
+// ===============================
+// Categories Section
+// ===============================
+.categories-section {
+  margin-bottom: 16px;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.category-item-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+// ===============================
+// Category Card
+// ===============================
+.category-card {
+  margin: 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  height: 100%;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  ion-card-content {
+    padding: 20px;
+  }
+}
+
+.category-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+
+// ===============================
+// Category Icon
+// ===============================
+.category-icon-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.category-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-secondary) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.3);
+
+  ion-icon {
+    font-size: 40px;
+    color: white;
+  }
+}
+
+// ===============================
+// Category Info
+// ===============================
+.category-info {
+  flex: 1;
+  text-align: center;
+  width: 100%;
+}
+
+.category-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--ion-color-dark);
+}
+
+.category-badge {
+  font-size: 11px;
+  padding: 6px 12px;
+  font-weight: 600;
+}
+
+// ===============================
+// Action Buttons
+// ===============================
+.category-actions {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.action-btn {
+  --padding-start: 10px;
+  --padding-end: 10px;
+  margin: 0;
+  width: 40px;
+  height: 40px;
+  transition: all 0.2s ease;
+
+  ion-icon {
+    font-size: 20px;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.edit-btn {
+  --color: var(--ion-color-warning);
+  --background-hover: rgba(var(--ion-color-warning-rgb), 0.1);
+}
+
+.delete-btn {
+  --color: var(--ion-color-danger);
+  --background-hover: rgba(var(--ion-color-danger-rgb), 0.1);
+}
+
+// ===============================
+// Edit Form Card
+// ===============================
+.edit-form-card {
+  margin: 0;
+  width:202%;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  animation: slideDown 0.3s ease;
+  overflow: hidden;
+
+  ion-card-header {
+    padding: 20px 20px 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  ion-card-content {
+    padding: 20px;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.edit-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  ion-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ion-color-dark);
+    margin: 0;
+  }
+
+  ion-button {
+    --color: var(--ion-color-medium);
+    margin: 0;
+  }
+}
+
+// ===============================
+// Icon Preview
+// ===============================
+.icon-preview-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 20px;
+  background: rgba(var(--ion-color-primary-rgb), 0.05);
+  border-radius: 12px;
+
+  .icon-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-secondary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.3);
+
+    ion-icon {
+      font-size: 40px;
+      color: white;
+    }
+  }
+
+  .icon-preview-label {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ion-color-medium);
+  }
+}
+
+.edit-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edit-item {
+  --background: rgba(0, 0, 0, 0.02);
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  margin-bottom: 0;
+
+  ion-label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--ion-color-dark);
+  }
+}
+
+.edit-form-actions {
+  margin-top: 12px;
+
+  ion-button {
+    --border-radius: 12px;
+    --padding-top: 14px;
+    --padding-bottom: 14px;
+    font-weight: 600;
+    text-transform: none;
+    font-size: 14px;
+
+    ion-icon {
+      font-size: 18px;
+    }
+  }
+}
+
+// ===============================
+// No Categories
+// ===============================
+.no-categories-card {
+  margin: 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  ion-card-content {
+    padding: 60px 20px;
+  }
+}
+
+.no-categories {
+  text-align: center;
+  color: var(--ion-color-medium);
+
+  .no-categories-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 16px;
+    margin: 0 0 20px 0;
+    font-weight: 500;
+  }
+
+  ion-button {
+    text-transform: none;
+    font-weight: 600;
+  }
+}
+
+// ===============================
+// Pagination Section
+// ===============================
+.pagination-section {
+  margin-top: 16px;
+}
+
+.pagination-card {
+  margin: 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  ion-card-content {
+    padding: 16px 20px;
+  }
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+
+  ion-button {
+    --border-radius: 12px;
+    text-transform: none;
+    font-weight: 600;
+    font-size: 13px;
+
+    ion-icon {
+      font-size: 16px;
+    }
+
+    &[disabled] {
+      opacity: 0.4;
+    }
+  }
+}
+
+.page-numbers {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.page-number {
+  min-width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  background: transparent;
+  color: var(--ion-color-dark);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0 12px;
+
+  &:hover {
+    background: rgba(var(--ion-color-primary-rgb), 0.05);
+    border-color: var(--ion-color-primary);
+  }
+
+  &.active {
+    background: var(--ion-color-primary);
+    border-color: var(--ion-color-primary);
+    color: white;
+    transform: scale(1.05);
+  }
+}
+
+// ===============================
+// Responsive Design
+// ===============================
+@media (max-width: 768px) {
+  .categories-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pagination-container {
+    flex-direction: column;
+  }
+
+  .page-number {
+    min-width: 36px;
+    height: 36px;
+  }
+}

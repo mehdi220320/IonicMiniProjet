@@ -21,41 +21,90 @@
     </div>
 
     <ion-list class="menu-list">
-      <ion-item button detail="false" lines="none" (click)="navigateTo('dashboard')" [class.active]="currentPage === 'dashboard'">
+      <ion-item
+        button
+        detail="false"
+        lines="none"
+        [href]="currentPage === '/admin' ? null : '/admin'"
+        [disabled]="currentPage === '/admin'"
+        [class.active]="currentPage === '/admin'"
+        (click)="currentPage === '/admin' ? $event.preventDefault() : null">
         <ion-icon name="grid-outline" slot="start"></ion-icon>
         <ion-label>Dashboard</ion-label>
       </ion-item>
 
-      <ion-item button detail="false" lines="none" (click)="navigateTo('add-product')" [class.active]="currentPage === 'add-product'">
+      <ion-item
+        button
+        detail="false"
+        lines="none"
+        [href]="currentPage === '/admin/add-product' ? null : '/admin/add-product'"
+        [disabled]="currentPage === '/admin/add-product'"
+        [class.active]="currentPage === '/admin/add-product'"
+        (click)="currentPage === '/admin/add-product' ? $event.preventDefault() : null">
         <ion-icon name="add-circle-outline" slot="start"></ion-icon>
         <ion-label>Add Product</ion-label>
       </ion-item>
 
-      <ion-item button detail="false" lines="none" (click)="navigateTo('add-category')" [class.active]="currentPage === 'add-category'">
+      <ion-item
+        button
+        detail="false"
+        lines="none"
+        [href]="currentPage === '/admin/add-category' ? null : '/admin/add-category'"
+        [disabled]="currentPage === '/admin/add-category'"
+        [class.active]="currentPage === '/admin/add-category'"
+        (click)="currentPage === '/admin/add-category' ? $event.preventDefault() : null">
         <ion-icon name="pricetags-outline" slot="start"></ion-icon>
         <ion-label>Add Category</ion-label>
       </ion-item>
 
-      <ion-item button detail="false" lines="none" (click)="navigateTo('users')" [class.active]="currentPage === 'users'">
+      <ion-item
+        button
+        detail="false"
+        lines="none"
+        [href]="currentPage === '/admin/users' ? null : '/admin/users'"
+        [disabled]="currentPage === '/admin/users'"
+        [class.active]="currentPage === '/admin/users'"
+        (click)="currentPage === '/admin/users' ? $event.preventDefault() : null">
         <ion-icon name="people-outline" slot="start"></ion-icon>
         <ion-label>All Users</ion-label>
       </ion-item>
 
-      <ion-item button detail="false" lines="none" (click)="navigateTo('orders')" [class.active]="currentPage === 'orders'">
+      <ion-item
+        button
+        detail="false"
+        lines="none"
+        [href]="currentPage === '/admin/orders' ? null : '/admin/orders'"
+        [disabled]="currentPage === '/admin/orders'"
+        [class.active]="currentPage === '/admin/orders'"
+        (click)="currentPage === '/admin/orders' ? $event.preventDefault() : null">
         <ion-icon name="receipt-outline" slot="start"></ion-icon>
         <ion-label>Orders Management</ion-label>
       </ion-item>
 
-      <ion-item button detail="false" lines="none" href="/home" >
+      <ion-item
+        button
+        detail="false"
+        lines="none"
+        [href]="currentPage === '/home' ? null : '/home'"
+        [disabled]="currentPage === '/home'"
+        [class.active]="currentPage === '/home'"
+        (click)="currentPage === '/home' ? $event.preventDefault() : null">
         <ion-icon name="home-outline" slot="start"></ion-icon>
         <ion-label>Home</ion-label>
       </ion-item>
-      <ion-item button detail="false" lines="none" (click)="navigateTo('settings')" [class.active]="currentPage === 'settings'">
+
+      <ion-item
+        button
+        detail="false"
+        lines="none"
+        [href]="currentPage === '/admin/settings' ? null : '/admin/settings'"
+        [disabled]="currentPage === '/admin/settings'"
+        [class.active]="currentPage === '/admin/settings'"
+        (click)="currentPage === '/admin/settings' ? $event.preventDefault() : null">
         <ion-icon name="settings-outline" slot="start"></ion-icon>
         <ion-label>Settings</ion-label>
       </ion-item>
     </ion-list>
-
     <div class="menu-footer">
       <ion-menu-toggle>
         <ion-button expand="block" color="danger" (click)="logout()">

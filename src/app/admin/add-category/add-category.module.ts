@@ -8,6 +8,7 @@ import { AddCategoryPageRoutingModule } from './add-category-routing.module';
 
 import { AddCategoryPage } from './add-category.page';
 import {MenuComponent} from "../menu/menu.component";
+import {FooterComponent} from "../footer/footer.component";
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import {MenuComponent} from "../menu/menu.component";
     FormsModule,
     IonicModule,
     AddCategoryPageRoutingModule,
-    MenuComponent
+    MenuComponent,
+    FooterComponent
   ],
   declarations: [AddCategoryPage]
 })

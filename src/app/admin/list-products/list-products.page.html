@@ -52,12 +52,9 @@
                       <p class="product-description">{{ product.description }}</p>
                       <div class="product-meta">
                         <span class="product-price">${{ product.price }}</span>
-                        <!--                      <ion-badge class="product-stock" [color]="product.stock > 0 ? 'success' : 'danger'">-->
-                        <!--                        Stock: {{ product.stock }}-->
-                        <!--                      </ion-badge>-->
-                        <!--                      <ion-badge class="product-category" color="medium">-->
-                        <!--                        {{ product.category || 'Uncategorized' }}-->
-                        <!--                      </ion-badge>-->
+                        <ion-badge class="product-category" color="medium">
+                          {{ product.category!.name || 'Uncategorized' }}
+                        </ion-badge>
                       </div>
                     </div>
 
@@ -107,6 +104,25 @@
 
                 <ion-card-content>
                   <div class="edit-form-content">
+                    <!-- Product Image Update -->
+                    <div class="image-update-section">
+                      <div class="current-image">
+                        <img
+                          [src]="editingProduct.imageUri || 'assets/placeholder.jpg'"
+                          alt="Product Image"
+                          onerror="this.src='assets/placeholder.jpg'">
+                      </div>
+                      <ion-button
+                        expand="block"
+                        fill="outline"
+                        color="primary"
+                        (click)="presentImageOptions()"
+                        [disabled]="isUploadingImage">
+                        <ion-icon slot="start" name="image-outline"></ion-icon>
+                        {{ isUploadingImage ? 'Uploading...' : 'Change Image' }}
+                      </ion-button>
+                    </div>
+
                     <ion-item class="edit-item">
                       <ion-label position="stacked">Name</ion-label>
                       <ion-input
@@ -133,33 +149,31 @@
                           placeholder="0.00">
                         </ion-input>
                       </ion-item>
-
-
                     </div>
 
                     <ion-item class="edit-item">
                       <ion-label position="stacked">Category</ion-label>
-                      <ion-input
-                        [(ngModel)]="editingProduct.category!.name"
-                        placeholder="Category">
-                      </ion-input>
-                    </ion-item>
-
-                    <ion-item class="edit-item">
-                      <ion-label position="stacked">Image URL</ion-label>
-                      <ion-input
-                        [(ngModel)]="editingProduct.imageUri"
-                        placeholder="https://...">
-                      </ion-input>
+                      <ion-select
+                        [(ngModel)]="editingProduct.category!.id"
+                        (ionChange)="onCategoryChange($event)"
+                        placeholder="Select category"
+                        interface="action-sheet">
+                        <ion-select-option
+                          *ngFor="let category of categories"
+                          [value]="category.id">
+                          {{ category.name }}
+                        </ion-select-option>
+                      </ion-select>
                     </ion-item>
 
                     <div class="edit-form-actions">
                       <ion-button
                         expand="block"
                         color="primary"
-                        (click)="saveEdit(product.id!)">
+                        (click)="saveEdit(product.id!)"
+                        [disabled]="isUploadingImage">
                         <ion-icon slot="start" name="save-outline"></ion-icon>
-                        Save Changes
+                        {{ isUploadingImage ? 'Processing...' : 'Save Changes' }}
                       </ion-button>
                     </div>
                   </div>

@@ -1,13 +1,201 @@
-<!--<ion-header [translucent]="true">-->
-<!--  <ion-toolbar>-->
-<!--    <ion-title>listCategories</ion-title>-->
-<!--  </ion-toolbar>-->
-<!--</ion-header>-->
+<app-menu></app-menu>
 
-<!--<ion-content [fullscreen]="true">-->
-<!--  <ion-header collapse="condense">-->
-<!--    <ion-toolbar>-->
-<!--      <ion-title size="large">listCategories</ion-title>-->
-<!--    </ion-toolbar>-->
-<!--  </ion-header>-->
-<!--</ion-content>-->
+<div class="ion-page" id="main-content">
+
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button auto-hide="false"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Category List</ion-title>
+      <ion-buttons slot="end">
+        <ion-button routerLink="/admin">
+          <ion-icon name="home-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <div class="content-wrapper">
+      <!-- Search Bar -->
+      <div class="search-section">
+        <ion-searchbar
+          class="custom-searchbar"
+          placeholder="Search categories..."
+          [(ngModel)]="searchTerm"
+          (ionInput)="onSearchChange($event)"
+          animated="true">
+        </ion-searchbar>
+      </div>
+
+      <!-- Categories Grid -->
+      <div class="categories-section">
+        <ng-container *ngIf="paginatedCategories$ | async as categories">
+          <ng-container *ngIf="categories.length > 0; else noCategories">
+            <div class="categories-grid">
+              <div *ngFor="let category of categories" class="category-item-wrapper">
+                <!-- Category Card -->
+                <ion-card class="category-card">
+                  <ion-card-content>
+                    <div class="category-content">
+                      <!-- Category Icon -->
+                      <div class="category-icon-wrapper">
+                        <div class="category-icon">
+                          <ion-icon [name]="category.icon"></ion-icon>
+                        </div>
+                      </div>
+
+                      <!-- Category Info -->
+                      <div class="category-info">
+                        <h3 class="category-name">{{ category.name }}</h3>
+                        <ion-badge color="medium" class="category-badge">
+                          {{ getIconLabel(category.icon) }}
+                        </ion-badge>
+                      </div>
+
+                      <!-- Action Buttons -->
+                      <div class="category-actions">
+                        <ion-button
+                          fill="clear"
+                          size="small"
+                          class="action-btn edit-btn"
+                          (click)="toggleEdit(category)">
+                          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                        </ion-button>
+
+                        <ion-button
+                          fill="clear"
+                          size="small"
+                          class="action-btn delete-btn"
+                          (click)="confirmDelete(category.id!, category.name)">
+                          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                        </ion-button>
+                      </div>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+
+                <!-- Edit Form (Slide Down) -->
+                <ion-card class="edit-form-card" *ngIf="expandedCategoryId === category.id">
+                  <ion-card-header>
+                    <div class="edit-form-header">
+                      <ion-card-title>Edit Category</ion-card-title>
+                      <ion-button
+                        fill="clear"
+                        size="small"
+                        (click)="cancelEdit()">
+                        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+                      </ion-button>
+                    </div>
+                  </ion-card-header>
+
+                  <ion-card-content>
+                    <div class="edit-form-content">
+                      <!-- Icon Preview -->
+                      <div class="icon-preview-section">
+                        <div class="icon-preview">
+                          <ion-icon [name]="editingCategory.icon || 'help-outline'"></ion-icon>
+                        </div>
+                        <p class="icon-preview-label">Selected Icon</p>
+                      </div>
+
+                      <ion-item class="edit-item">
+                        <ion-label position="stacked">Category Name</ion-label>
+                        <ion-input
+                          [(ngModel)]="editingCategory.name"
+                          placeholder="Category name">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item class="edit-item">
+                        <ion-label position="stacked">Icon</ion-label>
+                        <ion-select
+                          [(ngModel)]="editingCategory.icon"
+                          (ionChange)="onIconChange($event)"
+                          placeholder="Select icon"
+                          interface="action-sheet">
+                          <ion-select-option
+                            *ngFor="let icon of availableIcons"
+                            [value]="icon.value">
+                            {{ icon.label }}
+                          </ion-select-option>
+                        </ion-select>
+                      </ion-item>
+
+                      <div class="edit-form-actions">
+                        <ion-button
+                          expand="block"
+                          color="primary"
+                          (click)="saveEdit(category.id!)">
+                          <ion-icon slot="start" name="save-outline"></ion-icon>
+                          Save Changes
+                        </ion-button>
+                      </div>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #noCategories>
+            <ion-card class="no-categories-card">
+              <ion-card-content>
+                <div class="no-categories">
+                  <ion-icon name="pricetags-outline" class="no-categories-icon"></ion-icon>
+                  <p>No categories found</p>
+                  <ion-button
+                    size="small"
+                    color="primary"
+                    (click)="navigateToAddCategory()">
+                    Add First Category
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ng-template>
+        </ng-container>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-section" *ngIf="totalPages > 1">
+        <ion-card class="pagination-card">
+          <ion-card-content>
+            <div class="pagination-container">
+              <ion-button
+                fill="outline"
+                size="small"
+                [disabled]="currentPage === 1"
+                (click)="previousPage()">
+                <ion-icon slot="start" name="chevron-back-outline"></ion-icon>
+                Previous
+              </ion-button>
+
+              <div class="page-numbers">
+                <button
+                  *ngFor="let page of getPageNumbers()"
+                  class="page-number"
+                  [class.active]="page === currentPage"
+                  (click)="goToPage(page)">
+                  {{ page }}
+                </button>
+              </div>
+
+              <ion-button
+                fill="outline"
+                size="small"
+                [disabled]="currentPage === totalPages"
+                (click)="nextPage()">
+                Next
+                <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </ion-content>
+
+  <app-footer></app-footer>
+</div>

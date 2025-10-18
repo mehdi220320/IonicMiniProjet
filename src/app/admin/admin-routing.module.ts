@@ -23,7 +23,11 @@ const routes: Routes = [
   {
     path: 'list-categories',
     loadChildren: () => import('./list-categories/list-categories.module').then( m => m.ListCategoriesPageModule)
+  },  {
+    path: 'list-users',
+    loadChildren: () => import('./list-users/list-users.module').then( m => m.ListUsersPageModule)
   }
+
 
 ];
 

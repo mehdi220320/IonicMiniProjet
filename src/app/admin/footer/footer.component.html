@@ -1,15 +1,32 @@
 <ion-footer>
   <ion-toolbar>
     <div class="footer-nav">
-      <ion-button class="footer-btn active"  routerLink="/admin">
+      <ion-button
+        class="footer-btn"
+        [class.active]="currentPage==='/admin'"
+        [href]="currentPage==='/admin' ? null : '/admin'"
+        [disabled]="currentPage==='/admin'"
+        (click)="currentPage==='/admin' ? $event.preventDefault() : null">
         <ion-icon name="grid-outline"></ion-icon>
         <span>Dashboard</span>
       </ion-button>
-      <ion-button class="footer-btn"  routerLink="/admin/list-products">
+
+      <ion-button
+        class="footer-btn"
+        [class.active]="currentPage==='/admin/list-products'"
+        [href]="currentPage==='/admin/list-products' ? null : '/admin/list-products'"
+        [disabled]="currentPage==='/admin/list-products'"
+        (click)="currentPage==='/admin/list-products' ? $event.preventDefault() : null">
         <ion-icon name="cube-outline"></ion-icon>
-        <span>Product</span>
+        <span>Products</span>
       </ion-button>
-      <ion-button class="footer-btn" routerLink="/categories">
+
+      <ion-button
+        class="footer-btn"
+        [class.active]="currentPage==='/admin/list-categories'"
+        [href]="currentPage==='/admin/list-categories' ? null : '/admin/list-categories'"
+        [disabled]="currentPage==='/admin/list-categories'"
+        (click)="currentPage==='/admin/list-categories' ? $event.preventDefault() : null">
         <ion-icon name="pricetags-outline"></ion-icon>
         <span>Categories</span>
       </ion-button>

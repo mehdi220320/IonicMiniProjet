@@ -1,7 +1,7 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, OnDestroy} from '@angular/core';
 import {AuthService} from "../../services/auth-service";
 import {User, UserRole} from "../../models/User";
-import {Router, RouterModule} from "@angular/router";
+import {Router, RouterModule, NavigationStart} from "@angular/router";
 import {
   IonMenu,
   IonHeader,
@@ -15,9 +15,13 @@ import {
   IonIcon,
   IonLabel,
   IonButton,
-  IonMenuToggle, MenuController, AlertController, ToastController
+  IonMenuToggle,
+  MenuController,
+  AlertController,
+  ToastController
 } from '@ionic/angular/standalone';
 import {CommonModule} from "@angular/common";
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-menu',
@@ -42,30 +46,36 @@ import {CommonModule} from "@angular/common";
     RouterModule
   ]
 })
-export class MenuComponent  implements OnInit {
+export class MenuComponent implements OnInit, OnDestroy {
 
   admin: User | null = null;
   currentPage: string = 'dashboard';
   searchQuery: string = '';
 
-  private authService = inject(AuthService)
-  private router= inject(Router)
-  private menuCtrl= inject( MenuController)
-  private alertController= inject( AlertController)
-  private toastController= inject( ToastController)
-  constructor(
+  private routerSubscription?: Subscription;
 
-  ) {}
+  private authService = inject(AuthService)
+  private router = inject(Router)
+  private menuCtrl = inject(MenuController)
+  private alertController = inject(AlertController)
+  private toastController = inject(ToastController)
+
+  constructor() {}
 
   async ngOnInit() {
-  //await this.loadAdminData();
-  //await this.checkAdminRole();
+    await this.loadAdminData();
+    this.currentPage=this.router.url
+  }
+
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
   async ionViewWillEnter() {
     await this.loadAdminData();
   }
-
 
   async loadAdminData() {
     try {
@@ -90,44 +100,6 @@ export class MenuComponent  implements OnInit {
         'You do not have permission to access the admin panel.',
         () => this.router.navigate(['/home'])
       );
-    }
-  }
-
-  async navigateTo(page: string) {
-    this.currentPage = page;
-    await this.menuCtrl.close();
-
-    switch (page) {
-      case 'dashboard':
-        // Already on dashboard, refresh data
-        await this.loadAdminData();
-        break;
-      case 'products':
-        this.router.navigate(['/admin/products']);
-        break;
-      case 'add-product':
-        this.router.navigate(['/admin/add-product']);
-        break;
-      case 'categories':
-        this.router.navigate(['/admin/categories']);
-        break;
-      case 'add-category':
-        this.router.navigate(['/admin/add-category']);
-        break;
-      case 'users':
-        this.router.navigate(['/admin/users']);
-        break;
-      case 'orders':
-        this.router.navigate(['/admin/orders']);
-        break;
-      case 'home':
-        this.router.navigate(['/home']);
-        break;
-      case 'settings':
-        this.router.navigate(['/admin/settings']);
-        break;
-      default:
-        break;
     }
   }
 
@@ -166,20 +138,16 @@ export class MenuComponent  implements OnInit {
     this.searchQuery = query;
 
     if (query.trim() === '') {
-      // Reset to show all data
       console.log('Search cleared');
       return;
     }
 
-    // Implement search logic here
     console.log('Searching for:', query);
   }
-
 
   async refreshDashboard(event?: any) {
     try {
       await this.loadAdminData();
-      // Here you would typically fetch fresh data from your backend
       await this.showToast('Dashboard refreshed', 'success');
 
       if (event) {
@@ -194,7 +162,6 @@ export class MenuComponent  implements OnInit {
       }
     }
   }
-
 
   private async showToast(message: string, color: string = 'primary') {
     const toast = await this.toastController.create({
@@ -225,7 +192,6 @@ export class MenuComponent  implements OnInit {
     await alert.present();
   }
 
-
   formatCurrency(amount: string): string {
     return amount;
   }
@@ -240,11 +206,9 @@ export class MenuComponent  implements OnInit {
     return statusMap[status] || 'medium';
   }
 
-
   async openMenu() {
     await this.menuCtrl.open();
   }
-
 
   async closeMenu() {
     await this.menuCtrl.close();
