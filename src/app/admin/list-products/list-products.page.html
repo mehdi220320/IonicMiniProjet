@@ -1,0 +1,230 @@
+<app-menu></app-menu>
+
+<div class="ion-page" id="main-content">
+
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button auto-hide="false"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Product List</ion-title>
+      <ion-buttons slot="end">
+        <ion-button routerLink="/admin">
+          <ion-icon name="home-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <div class="content-wrapper">
+      <!-- Search Bar -->
+      <div class="search-section">
+        <ion-searchbar
+          class="custom-searchbar"
+          placeholder="Search products..."
+          [(ngModel)]="searchTerm"
+          (ionInput)="onSearchChange($event)"
+          animated="true">
+        </ion-searchbar>
+      </div>
+
+      <!-- Products List -->
+      <div class="products-section">
+        <ng-container *ngIf="paginatedProducts$ | async as products">
+          <ng-container *ngIf="products.length > 0; else noProducts">
+            <div *ngFor="let product of products" class="product-item-wrapper">
+              <!-- Product Card -->
+              <ion-card class="product-card">
+                <ion-card-content>
+                  <div class="product-content">
+                    <!-- Product Image -->
+                    <div class="product-image">
+                      <img
+                        [src]="product.imageUri || 'assets/placeholder.jpg'"
+                        [alt]="product.name"
+                        onerror="this.src='assets/placeholder.jpg'">
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-info">
+                      <h3 class="product-name">{{ product.name }}</h3>
+                      <p class="product-description">{{ product.description }}</p>
+                      <div class="product-meta">
+                        <span class="product-price">${{ product.price }}</span>
+                        <!--                      <ion-badge class="product-stock" [color]="product.stock > 0 ? 'success' : 'danger'">-->
+                        <!--                        Stock: {{ product.stock }}-->
+                        <!--                      </ion-badge>-->
+                        <!--                      <ion-badge class="product-category" color="medium">-->
+                        <!--                        {{ product.category || 'Uncategorized' }}-->
+                        <!--                      </ion-badge>-->
+                      </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="product-actions">
+                      <ion-button
+                        fill="clear"
+                        size="small"
+                        class="action-btn view-btn"
+                        href="/admin/product/{{ product.id }}">
+                        <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+                      </ion-button>
+
+                      <ion-button
+                        fill="clear"
+                        size="small"
+                        class="action-btn edit-btn"
+                        (click)="toggleEdit(product)">
+                        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                      </ion-button>
+
+                      <ion-button
+                        fill="clear"
+                        size="small"
+                        class="action-btn delete-btn"
+                        (click)="confirmDelete(product.id!)">
+                        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                      </ion-button>
+                    </div>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+
+              <!-- Edit Form (Slide Down) -->
+              <ion-card class="edit-form-card" *ngIf="expandedProductId === product.id">
+                <ion-card-header>
+                  <div class="edit-form-header">
+                    <ion-card-title>Edit Product</ion-card-title>
+                    <ion-button
+                      fill="clear"
+                      size="small"
+                      (click)="cancelEdit()">
+                      <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+                    </ion-button>
+                  </div>
+                </ion-card-header>
+
+                <ion-card-content>
+                  <div class="edit-form-content">
+                    <ion-item class="edit-item">
+                      <ion-label position="stacked">Name</ion-label>
+                      <ion-input
+                        [(ngModel)]="editingProduct.name"
+                        placeholder="Product name">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item class="edit-item">
+                      <ion-label position="stacked">Description</ion-label>
+                      <ion-textarea
+                        [(ngModel)]="editingProduct.description"
+                        placeholder="Product description"
+                        rows="3">
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div class="form-row">
+                      <ion-item class="edit-item">
+                        <ion-label position="stacked">Price ($)</ion-label>
+                        <ion-input
+                          type="number"
+                          [(ngModel)]="editingProduct.price"
+                          placeholder="0.00">
+                        </ion-input>
+                      </ion-item>
+
+
+                    </div>
+
+                    <ion-item class="edit-item">
+                      <ion-label position="stacked">Category</ion-label>
+                      <ion-input
+                        [(ngModel)]="editingProduct.category!.name"
+                        placeholder="Category">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item class="edit-item">
+                      <ion-label position="stacked">Image URL</ion-label>
+                      <ion-input
+                        [(ngModel)]="editingProduct.imageUri"
+                        placeholder="https://...">
+                      </ion-input>
+                    </ion-item>
+
+                    <div class="edit-form-actions">
+                      <ion-button
+                        expand="block"
+                        color="primary"
+                        (click)="saveEdit(product.id!)">
+                        <ion-icon slot="start" name="save-outline"></ion-icon>
+                        Save Changes
+                      </ion-button>
+                    </div>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </div>
+          </ng-container>
+
+          <ng-template #noProducts>
+            <ion-card class="no-products-card">
+              <ion-card-content>
+                <div class="no-products">
+                  <ion-icon name="cube-outline" class="no-products-icon"></ion-icon>
+                  <p>No products found</p>
+                  <ion-button
+                    size="small"
+                    color="primary"
+                    (click)="navigateToAddProduct()">
+                    Add First Product
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ng-template>
+        </ng-container>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-section" *ngIf="totalPages > 1">
+        <ion-card class="pagination-card">
+          <ion-card-content>
+            <div class="pagination-container">
+              <ion-button
+                fill="outline"
+                size="small"
+                [disabled]="currentPage === 1"
+                (click)="previousPage()">
+                <ion-icon slot="start" name="chevron-back-outline"></ion-icon>
+                Previous
+              </ion-button>
+
+              <div class="page-numbers">
+                <button
+                  *ngFor="let page of getPageNumbers()"
+                  class="page-number"
+                  [class.active]="page === currentPage"
+                  (click)="goToPage(page)">
+                  {{ page }}
+                </button>
+              </div>
+
+              <ion-button
+                fill="outline"
+                size="small"
+                [disabled]="currentPage === totalPages"
+                (click)="nextPage()">
+                Next
+                <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </ion-content>
+
+  <app-footer></app-footer>
+</div>

@@ -326,53 +326,7 @@ ion-header {
   }
 }
 
-// Footer Navigation
-ion-footer {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
 
-  ion-toolbar {
-    --padding-top: 8px;
-    --padding-bottom: 8px;
-    --background: white;
-  }
-
-  .footer-nav {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 0;
-
-    .footer-btn {
-      --background: transparent;
-      --background-hover: rgba(var(--ion-color-primary-rgb), 0.1);
-      --background-activated: rgba(var(--ion-color-primary-rgb), 0.15);
-      --color: var(--ion-color-medium);
-      flex: 1;
-      height: 60px;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 12px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-
-      ion-icon {
-        font-size: 24px;
-      }
-
-      &.active {
-        --color: var(--ion-color-primary);
-        font-weight: 600;
-
-        ion-icon {
-          transform: scale(1.1);
-        }
-      }
-    }
-  }
-}
 
 // Responsive Design
 @media (max-width: 768px) {

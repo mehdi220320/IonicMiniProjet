@@ -250,22 +250,5 @@
   </ion-content>
 
   <!-- Footer Navigation -->
-  <ion-footer>
-    <ion-toolbar>
-      <div class="footer-nav">
-        <ion-button class="footer-btn active" (click)="navigateTo('dashboard')">
-          <ion-icon name="grid-outline"></ion-icon>
-          <span>Dashboard</span>
-        </ion-button>
-        <ion-button class="footer-btn" (click)="navigateTo('products')">
-          <ion-icon name="cube-outline"></ion-icon>
-          <span>Product</span>
-        </ion-button>
-        <ion-button class="footer-btn" (click)="navigateTo('categories')">
-          <ion-icon name="pricetags-outline"></ion-icon>
-          <span>Categories</span>
-        </ion-button>
-      </div>
-    </ion-toolbar>
-  </ion-footer>
+  <app-footer></app-footer>
 </div>
