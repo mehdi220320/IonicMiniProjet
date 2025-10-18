@@ -1,6 +1,6 @@
 <!-- Side Menu -->
 <!--<app-menu></app-menu>-->
-<app-menu></app-menu>
+
 <!-- Main Content -->
 <div class="ion-page" id="main-content">
   <ion-header>
@@ -10,7 +10,7 @@
       </ion-buttons>
       <ion-title>Add Category</ion-title>
       <ion-buttons slot="end">
-        <ion-button routerLink="/admin">
+        <ion-button (click)="navigateTo('dashboard')">
           <ion-icon name="home-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
