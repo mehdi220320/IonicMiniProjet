@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>My Cart</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if (cartItems.length > 0) {
+    <ion-list>
+      @for (item of cartItems; track item.id) {
+        <ion-item>
+          <ion-label>
+            <h2>{{ item.name }}</h2>
+            <p>${{ item.price }}</p>
+          </ion-label>
+          <ion-button
+            fill="clear"
+            color="danger"
+            slot="end"
+            (click)="removeItem(item.id!)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+      }
+    </ion-list>
+
+    <div class="total-section">
+      <ion-item>
+        <ion-label><strong>Total</strong></ion-label>
+        <ion-label slot="end"><strong>${{ total }}</strong></ion-label>
+      </ion-item>
+    </div>
+
+    <ion-button
+      expand="block"
+      color="success"
+      (click)="confirmOrder()">
+      Confirm Order
+    </ion-button>
+  } @else {
+    <div class="empty-cart">
+      <ion-icon name="cart-outline" size="large"></ion-icon>
+      <p>Your cart is empty</p>
+    </div>
+  }
+</ion-content>
