@@ -1,13 +1,227 @@
-<!--<ion-header [translucent]="true">-->
-<!--  <ion-toolbar>-->
-<!--    <ion-title>list-users</ion-title>-->
-<!--  </ion-toolbar>-->
-<!--</ion-header>-->
+<app-menu></app-menu>
 
-<!--<ion-content [fullscreen]="true">-->
-<!--  <ion-header collapse="condense">-->
-<!--    <ion-toolbar>-->
-<!--      <ion-title size="large">list-users</ion-title>-->
-<!--    </ion-toolbar>-->
-<!--  </ion-header>-->
-<!--</ion-content>-->
+<div class="ion-page" id="main-content">
+
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button auto-hide="false"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>User Management</ion-title>
+      <ion-buttons slot="end">
+        <ion-button routerLink="/admin">
+          <ion-icon name="home-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <div class="content-wrapper">
+      <!-- Search Bar -->
+      <div class="search-section">
+        <ion-searchbar
+          class="custom-searchbar"
+          placeholder="Search users by username, email, or role..."
+          [(ngModel)]="searchTerm"
+          (ionInput)="onSearchChange($event)"
+          animated="true">
+        </ion-searchbar>
+      </div>
+
+      <!-- Users List -->
+      <div class="users-section">
+        <ng-container *ngIf="paginatedUsers$ | async as users">
+          <ng-container *ngIf="users.length > 0; else noUsers">
+            <div *ngFor="let user of users" class="user-item-wrapper">
+              <!-- User Card -->
+              <ion-card class="user-card">
+                <ion-card-content>
+                  <div class="user-content">
+                    <!-- User Avatar -->
+                    <div class="user-avatar">
+                      <div class="avatar-placeholder">
+                        <ion-icon [name]="getRoleIcon(user.role)"></ion-icon>
+                      </div>
+                    </div>
+
+                    <!-- User Info -->
+                    <div class="user-info">
+                      <h3 class="user-name">{{ user.username || 'No username' }}</h3>
+                      <p class="user-email">{{ user.email }}</p>
+                      <div class="user-meta">
+                        <ion-badge
+                          class="user-role"
+                          [color]="getRoleColor(user.role)">
+                          <ion-icon
+                            [name]="getRoleIcon(user.role)"
+                            size="small"
+                            style="margin-right: 4px;">
+                          </ion-icon>
+                          {{ getRoleDisplayName(user.role) }}
+                        </ion-badge>
+                        <span class="user-id">ID: {{ user.id }}</span>
+                      </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="user-actions">
+                      <ion-button
+                        fill="clear"
+                        size="small"
+                        class="action-btn view-btn"
+                        (click)="viewUserDetails(user)">
+                        <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+                      </ion-button>
+
+                      <ion-button
+                        fill="clear"
+                        size="small"
+                        class="action-btn role-btn"
+                        [color]="getRoleButtonColor(user.role)"
+                        (click)="toggleUserRole(user)"
+                        [disabled]="isUpdatingRole">
+                        <ion-icon
+                          slot="icon-only"
+                          [name]="getRoleButtonIcon(user.role)">
+                        </ion-icon>
+                      </ion-button>
+
+                      <ion-button
+                        fill="clear"
+                        size="small"
+                        class="action-btn delete-btn"
+                        (click)="confirmDelete(user.id)"
+                        [disabled]="user.role === UserRole.ADMIN">
+                        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                      </ion-button>
+                    </div>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+
+              <!-- Role Update Confirmation -->
+              <ion-card class="role-update-card" *ngIf="expandedUserId === user.id">
+                <ion-card-header>
+                  <div class="role-update-header">
+                    <ion-card-title>Update User Role</ion-card-title>
+                    <ion-button
+                      fill="clear"
+                      size="small"
+                      (click)="cancelRoleUpdate()">
+                      <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+                    </ion-button>
+                  </div>
+                </ion-card-header>
+
+                <ion-card-content>
+                  <div class="role-update-content">
+                    <div class="user-summary">
+                      <div class="avatar-placeholder small">
+                        <ion-icon [name]="getRoleIcon(user.role)"></ion-icon>
+                      </div>
+                      <div class="user-details">
+                        <strong>{{ user.username }}</strong>
+                        <div>{{ user.email }}</div>
+                      </div>
+                    </div>
+
+                    <p class="role-update-message">
+                      Change role from
+                      <strong [class]="'role-' + user.role.toLowerCase()">
+                        {{ getRoleDisplayName(user.role) }}
+                      </strong>
+                      to
+                      <strong [class]="'role-' + (user.role === UserRole.ADMIN ? UserRole.USER.toLowerCase() : UserRole.ADMIN.toLowerCase())">
+                        {{ getRoleDisplayName(user.role === UserRole.ADMIN ? UserRole.USER : UserRole.ADMIN) }}
+                      </strong>?
+                    </p>
+
+                    <div class="role-update-actions">
+                      <ion-button
+                        expand="block"
+                        color="medium"
+                        fill="outline"
+                        (click)="cancelRoleUpdate()">
+                        <ion-icon slot="start" name="close-outline"></ion-icon>
+                        Cancel
+                      </ion-button>
+
+                      <ion-button
+                        expand="block"
+                        [color]="getRoleButtonColor(user.role)"
+                        (click)="confirmRoleUpdate(user)"
+                        [disabled]="isUpdatingRole">
+                        <ion-icon
+                          slot="start"
+                          [name]="getRoleButtonIcon(user.role)">
+                        </ion-icon>
+                        {{ isUpdatingRole ? 'Updating...' : getRoleButtonText(user.role) }}
+                      </ion-button>
+                    </div>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </div>
+          </ng-container>
+
+          <ng-template #noUsers>
+            <ion-card class="no-users-card">
+              <ion-card-content>
+                <div class="no-users">
+                  <ion-icon name="people-outline" class="no-users-icon"></ion-icon>
+                  <p>No users found</p>
+                  <p class="no-users-subtitle" *ngIf="searchTerm">
+                    Try adjusting your search terms
+                  </p>
+                  <p class="no-users-subtitle" *ngIf="!searchTerm">
+                    No users registered in the system
+                  </p>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ng-template>
+        </ng-container>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-section" *ngIf="totalPages > 1">
+        <ion-card class="pagination-card">
+          <ion-card-content>
+            <div class="pagination-container">
+              <ion-button
+                fill="outline"
+                size="small"
+                [disabled]="currentPage === 1"
+                (click)="previousPage()">
+                <ion-icon slot="start" name="chevron-back-outline"></ion-icon>
+                Previous
+              </ion-button>
+
+              <div class="page-numbers">
+                <button
+                  *ngFor="let page of getPageNumbers()"
+                  class="page-number"
+                  [class.active]="page === currentPage"
+                  (click)="goToPage(page)">
+                  {{ page }}
+                </button>
+              </div>
+
+              <ion-button
+                fill="outline"
+                size="small"
+                [disabled]="currentPage === totalPages"
+                (click)="nextPage()">
+                Next
+                <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </ion-content>
+
+  <app-footer></app-footer>
+</div>
