@@ -99,30 +99,38 @@ export class AuthService {
     });
   }
   async getCurrentUser(): Promise<User | null> {
-    const currentUser = this.auth.currentUser;
-    if (!currentUser) return null;
+    return new Promise((resolve) => {
+      onAuthStateChanged(this.auth, async (firebaseUser) => {
+        if (!firebaseUser) {
+          resolve(null);
+          return;
+        }
 
-    try {
-      const userDocRef = doc(this.firestore, `users/${currentUser.uid}`);
-      const userDoc = await getDoc(userDocRef);
+        try {
+          const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
+          const userDoc = await getDoc(userDocRef);
 
-      if (userDoc.exists()) {
-        const userData = userDoc.data() as User;
-        return {
-          id: currentUser.uid,
-          username: userData.username,
-          email: userData.email,
-          role: userData.role
-        };
-      } else {
-        console.warn('User document not found in Firestore.');
-        return null;
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      return null;
-    }
-  }
+          if (userDoc.exists()) {
+            const userData = userDoc.data() as User;
+            resolve({
+              id: firebaseUser.uid,
+              username: userData.username,
+              email: userData.email,
+              role: userData.role
+            });
+          } else {
+            console.warn('[AuthService] User document not found in Firestore.');
+            resolve(null);
+          }
+        } catch (error) {
+          console.error('[AuthService] Error fetching user data:', error);
+          resolve(null);
+        }
+      });
+    });
+
+
+}
 
   async getCurrentUserRole(): Promise<UserRole | null> {
     const user = await this.getCurrentUser();

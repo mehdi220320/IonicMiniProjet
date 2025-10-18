@@ -3,11 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import {AuthGuard} from "./guards/auth-guard";
 
 const routes: Routes = [
-  {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule),
-    canActivate: [AuthGuard]
-  },
+
   {
     path: '',
     redirectTo: 'login',
@@ -35,10 +31,39 @@ const routes: Routes = [
     path: 'product/:id',
     loadChildren: () =>
       import('./details-prod/details-prod.module').then(m => m.DetailsProdPageModule)
-  },  {
+  },
+  {
     path: 'unauthorized',
     loadChildren: () => import('./unauthorized/unauthorized.module').then( m => m.UnauthorizedPageModule)
+  },
+  {
+    path: 'cart',
+    loadChildren: () => import('./cart/cart.module').then(m => m.CartPageModule)
+  },
+  {
+    path: 'tabs',
+    loadComponent: () =>
+      import('./tabs/tabs.page').then(m => m.TabsPage),
+    children: [
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full'
+      },
+      {
+        path: 'home',
+        loadComponent: () =>
+          import('./home/home.page').then(m => m.HomePage)
+      },
+      {
+        path: 'orders',
+        loadComponent: () =>
+          import('./orders/orders.page').then(m => m.OrdersPage)
+      }
+    ]
   }
+
+
 
 ];
 

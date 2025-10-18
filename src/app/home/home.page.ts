@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {AuthService} from "../services/auth-service";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {User, UserRole} from "../models/User";
 import {ProductService} from "../services/productService";
 import {Product} from "../models/Product";
@@ -10,6 +10,8 @@ import {
   IonCardContent, IonSpinner, IonMenu, IonAvatar, IonItem, IonList, IonMenuToggle
 } from '@ionic/angular/standalone';
 import {FormsModule} from "@angular/forms";
+import {Cart} from "../services/cart";
+import {AsyncPipe, DecimalPipe} from "@angular/common";
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -36,7 +38,10 @@ import {FormsModule} from "@angular/forms";
     IonSpinner,
     IonAvatar,
     IonList,
-    IonItem
+    IonItem,
+    RouterLink,
+    AsyncPipe,
+    DecimalPipe
 
   ]
 })
@@ -44,16 +49,20 @@ export class HomePage {
   private authService = inject(AuthService);
   private router = inject(Router);
   private productService = inject(ProductService);
+  private cartService = inject(Cart);
 
+  cartCount = 0;
   user: User | null = null;
   searchQuery: string = '';
   products: Product[] = [];
-
+  cartCount$ = this.cartService.getCartCount$();
   ngOnInit() {
     this.loadUserData();
     this.loadProducts();
+   }
+  ionViewWillEnter() {
+    this.cartCount$ = this.cartService.getCartCount$();
   }
-
   async loadUserData() {
     try {
       this.user = await this.authService.getCurrentUser();
@@ -85,5 +94,10 @@ export class HomePage {
   goToDetail(productId: string) {
     console.log('Navigating to product:', productId);
     this.router.navigate(['/product', productId]);
+  }
+
+
+  async addToCart(product: Product) {
+    await this.cartService.addToCart(product);
   }
 }

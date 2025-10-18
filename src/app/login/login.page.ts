@@ -44,7 +44,7 @@ export class LoginPage  {
         if(await this.authService.getCurrentUserRole()==="ADMIN"){
           this.router.navigate(['/admin']);
         }else {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/tabs/home']);
 
         }
       } catch (error: any) {

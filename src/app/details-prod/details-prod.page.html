@@ -1,7 +1,9 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/"></ion-back-button>
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>{{ product?.name || 'Product Details' }}</ion-title>
   </ion-toolbar>
@@ -43,8 +45,17 @@
             <ion-label>{{ product.category.name || 'General' }}</ion-label>
           </ion-chip>
         </div>
-
-        <ion-button expand="block" color="success" size="large">
+        <div class="rating-section">
+          @for (star of stars; track star) {
+            <ion-icon
+              [name]="(star <= userRating) ? 'star' : 'star-outline'"
+              color="warning"
+              (click)="rate(star)">
+            </ion-icon>
+          }
+          <span>({{ product?.ratingsCount || 0 }} ratings)</span>
+        </div>
+        <ion-button expand="block" color="success" size="large" (click)="addToCart(product)">
           <ion-icon name="cart-outline" slot="start"></ion-icon>
           Add to Cart
         </ion-button>
