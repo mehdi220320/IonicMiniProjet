@@ -6,16 +6,18 @@ import {
   IonTitle,
   IonContent,
   IonButtons,
-  IonBackButton,
   IonButton,
   IonIcon,
   IonSpinner,
   IonChip,
-  IonLabel
+  IonLabel, NavController
 } from '@ionic/angular/standalone';
 import {ActivatedRoute} from "@angular/router";
 import {ProductService} from "../services/productService";
 import {Product} from "../models/Product";
+import {Cart} from "../services/cart";
+import {OrderService} from "../services/order-service";
+import {AuthService} from "../services/auth-service";
 @Component({
   selector: 'app-details-prod',
   templateUrl: './details-prod.page.html',
@@ -26,7 +28,6 @@ import {Product} from "../models/Product";
     IonTitle,
     IonContent,
     IonButtons,
-    IonBackButton,
     IonButton,
     IonIcon,
     IonSpinner,
@@ -37,8 +38,14 @@ import {Product} from "../models/Product";
 export class DetailsProdPage {
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
+  private authService = inject(AuthService);
 
-  product: Product | undefined;
+  private navCtrl = inject(NavController);
+  private cartService = inject(Cart);
+  private orderService = inject(OrderService);
+  product: any;
+  userRating = 0;
+  stars = [1, 2, 3, 4, 5];
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -51,5 +58,22 @@ export class DetailsProdPage {
         error: (err) => console.error('Error loading product:', err)
       });
     }
+  }
+  goBack() {
+    this.navCtrl.back();
+  }
+  async addToCart(product: Product) {
+    await this.cartService.addToCart(product);
+    this.goBack();
+  }
+  async rate(star: number) {
+    const user = await this.authService.getCurrentUser();
+    if (!user) {
+      console.log('User must be logged in to rate');
+      return;
+    }
+
+    this.userRating = star;
+    await this.productService.rateProduct(this.product.id!, user.id, star);
   }
 }

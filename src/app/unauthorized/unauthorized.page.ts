@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {arrowBackOutline, homeOutline, lockClosedOutline} from "ionicons/icons";
 import {
   IonContent,
@@ -24,8 +24,9 @@ import {Router} from "@angular/router";
   ],
 
 })
-export class UnauthorizedPage implements OnInit {
-  constructor(private router: Router) {
+export class UnauthorizedPage  {
+  private router= inject(Router)
+  constructor() {
     addIcons({ lockClosedOutline, arrowBackOutline, homeOutline });
   }
 
@@ -37,7 +38,5 @@ export class UnauthorizedPage implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  ngOnInit(): void {
-  }
 
 }

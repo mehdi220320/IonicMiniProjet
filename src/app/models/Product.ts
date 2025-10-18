@@ -8,4 +8,7 @@ export interface Product {
   imageUri: string;
   category: Category;
   createdAt: Date;
+  ratingsCount?: number;
+  rating?: number;
+
 }

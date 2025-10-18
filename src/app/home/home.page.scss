@@ -369,3 +369,16 @@ ion-card {
     height: 160px;
   }
 }
+.cart-icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  font-size: 0.7rem;
+  padding: 2px 5px;
+  border-radius: 10px;
+}
