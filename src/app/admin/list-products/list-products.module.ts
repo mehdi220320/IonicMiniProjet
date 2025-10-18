@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AddCategoryPageRoutingModule } from './add-category-routing.module';
+import { ListProductsPageRoutingModule } from './list-products-routing.module';
 
-import { AddCategoryPage } from './add-category.page';
+import { ListProductsPage } from './list-products.page';
 import {MenuComponent} from "../menu/menu.component";
 
 @NgModule({
@@ -14,9 +14,9 @@ import {MenuComponent} from "../menu/menu.component";
     CommonModule,
     FormsModule,
     IonicModule,
-    AddCategoryPageRoutingModule,
-    MenuComponent
+    ListProductsPageRoutingModule,
+    ListProductsPage
   ],
-  declarations: [AddCategoryPage]
+  declarations: []
 })
-export class AddCategoryPageModule {}
+export class ListProductsPageModule {}

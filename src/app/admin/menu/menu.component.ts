@@ -1,14 +1,46 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {AuthService} from "../../services/auth-service";
 import {User, UserRole} from "../../models/User";
-import {Router} from "@angular/router";
-import {AlertController, MenuController, ToastController} from "@ionic/angular";
+import {Router, RouterModule} from "@angular/router";
+import {
+  IonMenu,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonAvatar,
+  IonBadge,
+  IonList,
+  IonItem,
+  IonIcon,
+  IonLabel,
+  IonButton,
+  IonMenuToggle, MenuController, AlertController, ToastController
+} from '@ionic/angular/standalone';
+import {CommonModule} from "@angular/common";
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
-  standalone:false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    IonMenu,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonAvatar,
+    IonBadge,
+    IonList,
+    IonItem,
+    IonIcon,
+    IonLabel,
+    IonButton,
+    IonMenuToggle,
+    RouterModule
+  ]
 })
 export class MenuComponent  implements OnInit {
 
@@ -87,6 +119,9 @@ export class MenuComponent  implements OnInit {
         break;
       case 'orders':
         this.router.navigate(['/admin/orders']);
+        break;
+      case 'home':
+        this.router.navigate(['/home']);
         break;
       case 'settings':
         this.router.navigate(['/admin/settings']);
