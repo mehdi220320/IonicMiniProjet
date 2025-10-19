@@ -47,7 +47,7 @@ import {Subscription} from 'rxjs';
   ]
 })
 export class MenuComponent implements OnInit, OnDestroy {
-
+  tabClasses=['class1','class2','class3']
   admin: User | null = null;
   currentPage: string = 'dashboard';
   searchQuery: string = '';
