@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import {AuthGuard} from "./guards/auth-guard";
+import {loginGuard} from "./guards/login-guard";
 
 const routes: Routes = [
 
@@ -15,20 +16,25 @@ const routes: Routes = [
   },
   {
     path: 'signup',
+
     loadChildren: () => import('./signup/signup.module').then( m => m.SignupPageModule)
   },
   {
     path: 'admin',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard,loginGuard],
     data: { role: 'admin' },
     loadChildren: () => import('./admin/admin.module').then( m => m.AdminPageModule)
   },
   {
     path: 'details-prod',
+    canActivate: [loginGuard],
+
     loadChildren: () => import('./details-prod/details-prod.module').then( m => m.DetailsProdPageModule)
   },
   {
     path: 'product/:id',
+    canActivate: [loginGuard],
+
     loadChildren: () =>
       import('./details-prod/details-prod.module').then(m => m.DetailsProdPageModule)
   },
@@ -38,10 +44,12 @@ const routes: Routes = [
   },
   {
     path: 'cart',
+    canActivate: [loginGuard],
     loadChildren: () => import('./cart/cart.module').then(m => m.CartPageModule)
   },
   {
     path: 'tabs',
+    canActivate: [loginGuard],
     loadComponent: () =>
       import('./tabs/tabs.page').then(m => m.TabsPage),
     children: [

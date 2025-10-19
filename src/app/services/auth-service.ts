@@ -1,5 +1,12 @@
 import {inject, Injectable} from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential } from '@angular/fire/auth';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  getIdToken,
+  signInWithEmailAndPassword,
+  signOut,
+  UserCredential
+} from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage-angular';
 import { User, UserRole } from '../models/User';
@@ -135,5 +142,12 @@ export class AuthService {
   async getCurrentUserRole(): Promise<UserRole | null> {
     const user = await this.getCurrentUser();
     return user ? user.role : null;
+  }
+  async getToken(): Promise<string | null> {
+    const firebaseUser = this.auth.currentUser;
+    if (firebaseUser) {
+      return await getIdToken(firebaseUser, true);
+    }
+    return null;
   }
 }
