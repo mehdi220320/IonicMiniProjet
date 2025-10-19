@@ -14,6 +14,7 @@ import {Cart} from "../services/cart";
 import {AsyncPipe, DecimalPipe} from "@angular/common";
 import {CategoryService} from "../services/category-service";
 import {Category} from "../models/Category";
+import {HttpClient} from "@angular/common/http";
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -53,7 +54,7 @@ export class HomePage {
   private productService = inject(ProductService);
   private cartService = inject(Cart);
   private categoryService = inject(CategoryService);
-
+  private http= inject(HttpClient)
   user: User | null = null;
   products: Product[] = [];
   filteredProducts: Product[] = [];
@@ -67,6 +68,10 @@ export class HomePage {
     this.loadUserData();
     this.loadProducts();
     this.loadCategories();
+
+
+
+
   }
 
   ionViewWillEnter() {
