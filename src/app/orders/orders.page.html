@@ -1,19 +1,147 @@
-<ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title>Orders</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-menu contentId="main-content" type="overlay">
+  <ion-header>
+    <ion-toolbar  color="primary">
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-list>
-    @for (order of orders; track order.id) {
-      <ion-item>
-        <ion-label>
-          <h2>Order #{{ order.id }}</h2>
-          <p>Total: ${{ order.total }}</p>
-          <p>{{ order.createdAt?.toDate() | date:'short' }}</p>
-        </ion-label>
+  <ion-content>
+    <div class="user-profile">
+      <div class="avatar-container">
+        <ion-avatar>
+          <ion-icon name="person" class="avatar-icon"></ion-icon>
+        </ion-avatar>
+      </div>
+      <h2 class="user-name">{{ user?.username || 'Guest' }}</h2>
+      <p class="user-email">{{ user?.email || 'guest@example.com' }}</p>
+      <ion-badge [color]="user?.role === 'ADMIN' ? 'warning' : 'secondary'" class="user-role">
+        {{ user?.role || 'USER' }}
+      </ion-badge>
+    </div>
+
+    <ion-list class="menu-list">
+      <ion-item button detail="false" lines="none" href="tabs/orders">
+        <ion-icon name="home-outline" slot="start"></ion-icon>
+        <ion-label>Home</ion-label>
       </ion-item>
+
+      <ion-item button detail="false" lines="none" href="tabs/orders">
+        <ion-icon name="cart-outline" slot="start"></ion-icon>
+        <ion-label>My Orders</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none">
+        <ion-icon name="heart-outline" slot="start"></ion-icon>
+        <ion-label>Favorites</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none">
+        <ion-icon name="person-outline" slot="start"></ion-icon>
+        <ion-label>Profile</ion-label>
+      </ion-item>
+
+      <ion-item button detail="false" lines="none">
+        <ion-icon name="settings-outline" slot="start"></ion-icon>
+        <ion-label>Settings</ion-label>
+      </ion-item>
+      @if (user?.role === 'ADMIN') {
+      <ion-item button detail="false" lines="none" href='admin'>
+        <ion-icon name="id-card-outline" slot="start"></ion-icon>
+        <ion-label>Admin Panel</ion-label>
+      </ion-item>
+      }
+    </ion-list>
+
+    <div class="menu-footer">
+      <ion-menu-toggle>
+        <ion-button expand="block" color="danger" (click)="logout()">
+          <ion-icon name="log-out-outline" slot="start"></ion-icon>
+          Logout
+        </ion-button>
+      </ion-menu-toggle>
+    </div>
+  </ion-content>
+</ion-menu>
+
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button auto-hide="false"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Marketplace</ion-title>
+      <ion-buttons slot="end">
+        <ion-button [routerLink]="['/cart']">
+          <div class="cart-icon-wrapper">
+            <ion-icon name="cart-outline"></ion-icon>
+            @let count = cartCount$ | async;
+            @if ((count ?? 0) > 0) {
+            <ion-badge color="danger" class="cart-badge">{{ count }}</ion-badge>
+            }
+          </div>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content [fullscreen]="true" class="orders-content">
+  <div class="orders-container">
+    <div class="orders-header">
+      <h1>Order History</h1>
+      <p class="subtitle">Track and manage your purchases</p>
+    </div>
+
+    @if (orders.length === 0) {
+    <div class="empty-state">
+      <ion-icon name="receipt-outline" class="empty-icon"></ion-icon>
+      <h2>No Orders Yet</h2>
+      <p>Your order history will appear here</p>
+    </div>
+    } @else {
+    <div class="orders-list">
+      @for (order of orders; track order.id) {
+    <div class="order-card">
+      <div class="order-header">
+        <div class="order-number">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <span>Order #{{ order.id.substring(0, 8) }}</span>
+        </div>
+        <div class="order-status">
+          <ion-badge color="success">Completed</ion-badge>
+        </div>
+      </div>
+
+      <div class="order-body">
+        <div class="order-info">
+          <div class="info-item">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>{{ order.createdAt?.toDate() | date:'MMM d, y' }}</span>
+          </div>
+          <div class="info-item">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>{{ order.createdAt?.toDate() | date:'shortTime' }}</span>
+          </div>
+          <div class="info-item">
+            <ion-icon name="cube-outline"></ion-icon>
+            <span>{{ order.items?.length || 0 }} items</span>
+          </div>
+        </div>
+
+        <div class="order-total">
+          <span class="total-label">Total Amount</span>
+          <span class="total-amount">${{ order.total.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <div class="order-footer">
+        <ion-button fill="clear" size="small">
+          <ion-icon slot="start" name="eye-outline"></ion-icon>
+          View Details
+        </ion-button>
+      </div>
+    </div>
     }
-  </ion-list>
+    </div>
+    }
+  </div>
 </ion-content>
+</div>

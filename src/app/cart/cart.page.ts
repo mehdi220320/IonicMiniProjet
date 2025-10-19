@@ -5,12 +5,10 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonList,
-  IonItem,
-  IonLabel,
+
   IonButton,
   IonIcon,
-   NavController, IonButtons
+  NavController, IonButtons, IonBadge, IonCardTitle, IonCard, IonCardHeader, IonCardContent
 } from '@ionic/angular/standalone';
 import { Cart }  from  '../services/cart' ;
 import { Product } from '../models/Product';
@@ -28,12 +26,15 @@ import {AuthService} from "../services/auth-service";
     IonToolbar,
     IonTitle,
     IonContent,
-    IonList,
-    IonItem,
-    IonLabel,
+
     IonButton,
     IonIcon,
-    IonButtons
+    IonButtons,
+    IonBadge,
+    IonCardTitle,
+    IonCard,
+    IonCardHeader,
+    IonCardContent
   ]
 })
 export class CartPage implements OnInit {

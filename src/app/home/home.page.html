@@ -21,12 +21,12 @@
     </div>
 
     <ion-list class="menu-list">
-      <ion-item button detail="false" lines="none">
+      <ion-item button detail="false" lines="none" href="tabs/orders">
         <ion-icon name="home-outline" slot="start"></ion-icon>
         <ion-label>Home</ion-label>
       </ion-item>
 
-      <ion-item button detail="false" lines="none">
+      <ion-item button detail="false" lines="none" href="tabs/orders">
         <ion-icon name="cart-outline" slot="start"></ion-icon>
         <ion-label>My Orders</ion-label>
       </ion-item>
@@ -89,7 +89,7 @@
       <ion-searchbar
         placeholder="Search products..."
         animated="true"
-        [(ngModel)]="searchQuery">
+        (ionInput)="onSearchChange($event)">
       </ion-searchbar>
     </ion-toolbar>
   </ion-header>
@@ -100,30 +100,18 @@
     <div class="categories-section">
       <h3 class="section-title">Categories</h3>
       <div class="categories-scroll">
-        <ion-chip color="primary">
-          <ion-icon name="laptop-outline"></ion-icon>
-          <ion-label>Electronics</ion-label>
-        </ion-chip>
-        <ion-chip>
-          <ion-icon name="shirt-outline"></ion-icon>
-          <ion-label>Fashion</ion-label>
-        </ion-chip>
-        <ion-chip>
-          <ion-icon name="home-outline"></ion-icon>
-          <ion-label>Home</ion-label>
-        </ion-chip>
-        <ion-chip>
-          <ion-icon name="book-outline"></ion-icon>
-          <ion-label>Books</ion-label>
-        </ion-chip>
-        <ion-chip>
-          <ion-icon name="basketball-outline"></ion-icon>
-          <ion-label>Sports</ion-label>
-        </ion-chip>
+        @for (c of categories; track c.id) {
+        <ion-chip
+          color="{{ selectedCategory === c.name ? 'tertiary' : 'primary' }}"
+        (click)="selectCategory(c)">
+        <ion-icon [name]="c.icon"></ion-icon>
+        <ion-label>{{ c.name }}</ion-label>
+      </ion-chip>
+        }
       </div>
     </div>
-
     <!-- Featured Banner -->
+    @if( filteredProducts.length===products.length){
     <div class="featured-banner">
       <ion-card class="banner-card">
         <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&h=400&fit=crop" alt="Featured">
@@ -134,24 +122,20 @@
         </div>
       </ion-card>
     </div>
-
+    }
     <!-- Product Grid -->
     <div class="products-section">
       <div class="section-header">
         <h3 class="section-title">Featured Products</h3>
-        <ion-button fill="clear" size="small">
-          See All
-          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-        </ion-button>
       </div>
 
-      @if (products.length === 0) {
+      @if (filteredProducts.length === 0) {
       <div class="loading-container">
         <ion-spinner name="crescent"></ion-spinner>
       </div>
       } @else {
       <div class="products-grid">
-        @for (product of products; track product.id) {
+        @for (product of filteredProducts; track product.id) {
       <ion-card class="product-card" (click)="goToDetail(product.id!)" button>
         <div class="product-image">
           <img [src]="product.imageUri" alt="Product image" />

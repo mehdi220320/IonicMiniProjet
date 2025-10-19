@@ -73,10 +73,10 @@
         button
         detail="false"
         lines="none"
-        [href]="currentPage === '/admin/orders' ? null : '/admin/orders'"
-        [disabled]="currentPage === '/admin/orders'"
-        [class.active]="currentPage === '/admin/orders'"
-        (click)="currentPage === '/admin/orders' ? $event.preventDefault() : null">
+        [href]="currentPage === '/admin/list-orders' ? null : '/admin/list-orders'"
+        [disabled]="currentPage === '/admin/list-orders'"
+        [class.active]="currentPage === '/admin/list-orders'"
+        (click)="currentPage === '/admin/list-orders' ? $event.preventDefault() : null">
         <ion-icon name="receipt-outline" slot="start"></ion-icon>
         <ion-label>Orders Management</ion-label>
       </ion-item>

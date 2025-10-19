@@ -1,0 +1,80 @@
+<app-menu></app-menu>
+
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button auto-hide="false"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Category List</ion-title>
+      <ion-buttons slot="end">
+        <ion-button routerLink="/admin">
+          <ion-icon name="home-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true" class="orders-content">
+    <div class="orders-container">
+      <div class="orders-header">
+        <h1>Order History</h1>
+        <p class="subtitle">Track and manage your purchases</p>
+      </div>
+
+      @if (orders.length === 0) {
+      <div class="empty-state">
+        <ion-icon name="receipt-outline" class="empty-icon"></ion-icon>
+        <h2>No Orders Yet</h2>
+        <p>Your order history will appear here</p>
+      </div>
+      } @else {
+      <div class="orders-list">
+        @for (order of orders; track order.id) {
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-number">
+            <ion-icon name="document-text-outline"></ion-icon>
+            <span>Order #{{ order.id.substring(0, 8) }}</span>
+          </div>
+          <div class="order-status">
+            <ion-badge color="success">Completed</ion-badge>
+          </div>
+        </div>
+
+        <div class="order-body">
+          <div class="order-info">
+            <div class="info-item">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span>{{ order.createdAt?.toDate() | date:'MMM d, y' }}</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>{{ order.createdAt?.toDate() | date:'shortTime' }}</span>
+            </div>
+            <div class="info-item">
+              <ion-icon name="cube-outline"></ion-icon>
+              <span>{{ order.items?.length || 0 }} items</span>
+            </div>
+          </div>
+
+          <div class="order-total">
+            <span class="total-label">Total Amount</span>
+            <span class="total-amount">${{ order.total.toFixed(2) }}</span>
+          </div>
+        </div>
+
+        <div class="order-footer">
+          <ion-button fill="clear" size="small">
+            <ion-icon slot="start" name="eye-outline"></ion-icon>
+            View Details
+          </ion-button>
+        </div>
+      </div>
+      }
+      </div>
+      }
+    </div>
+  </ion-content>
+  <app-footer></app-footer>
+</div>

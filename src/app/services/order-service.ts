@@ -19,15 +19,12 @@ export class OrderService {
     };
     return await addDoc(this.ordersCollection, order);
   }
-  getOrders(userId: string, isAdmin: boolean): Observable<any[]> {
-
-  console.log(isAdmin)
-    if (isAdmin) {
-      return collectionData(this.ordersCollection, { idField: 'id' }) as Observable<any[]>;
-    } else {
-      const q = query(this.ordersCollection, where('userId', '==', userId));
-      return collectionData(q, { idField: 'id' }) as Observable<any[]>;
-    }
+  getOrders(): Observable<any[]> {
+    return collectionData(this.ordersCollection, { idField: 'id' }) as Observable<any[]>;
+  }
+  getOrdersById(userId:string):Observable<any[]>{
+    const q = query(this.ordersCollection, where('userId', '==', userId));
+    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
 
 
