@@ -61,10 +61,10 @@
         button
         detail="false"
         lines="none"
-        [href]="currentPage === '/admin/users' ? null : '/admin/users'"
-        [disabled]="currentPage === '/admin/users'"
-        [class.active]="currentPage === '/admin/users'"
-        (click)="currentPage === '/admin/users' ? $event.preventDefault() : null">
+        [href]="currentPage === '/admin/list-users' ? null : '/admin/list-users'"
+        [disabled]="currentPage === '/admin/list-users'"
+        [class.active]="currentPage === '/admin/list-users'"
+        (click)="currentPage === '/admin/list-users' ? $event.preventDefault() : null">
         <ion-icon name="people-outline" slot="start"></ion-icon>
         <ion-label>All Users</ion-label>
       </ion-item>

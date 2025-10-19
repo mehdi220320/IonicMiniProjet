@@ -41,12 +41,14 @@ export class LoginPage  {
         console.log('Logged in user:', user);
         await loading.dismiss();
 
-        if(await this.authService.getCurrentUserRole()==="ADMIN"){
-          this.router.navigate(['/admin']);
-        }else {
-          this.router.navigate(['/tabs/home']);
+        const role = await this.authService.getCurrentUserRole();
 
+        if (role === 'ADMIN') {
+          window.location.href = '/admin';
+        } else {
+          window.location.href = '/tabs/home';
         }
+
       } catch (error: any) {
         await loading.dismiss();
         this.showAlert('Login Failed', error.message || 'Invalid credentials');

@@ -10,5 +10,6 @@ export interface Product {
   createdAt: Date;
   ratingsCount?: number;
   rating?: number;
+  stock?:number;
 
 }
