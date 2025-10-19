@@ -1,5 +1,6 @@
 <!-- Side Menu -->
 <app-menu></app-menu>
+
 <!-- Main Content -->
 <div class="ion-page" id="main-content">
   <ion-header>
@@ -27,7 +28,9 @@
           </div>
           <div class="stat-info">
             <p class="stat-label">Total Revenue</p>
-            <h2 class="stat-value">$45,890</h2>
+            <h2 class="stat-value">
+             {{ totalRevenue | number: '1.0-0' }}  DT
+            </h2>
             <span class="stat-change positive">
               <ion-icon name="arrow-up"></ion-icon>
               12.5% from last month
@@ -43,7 +46,7 @@
           </div>
           <div class="stat-info">
             <p class="stat-label">Total Orders</p>
-            <h2 class="stat-value">1,247</h2>
+            <h2 class="stat-value">{{ totalOrders }}</h2>
             <span class="stat-change positive">
               <ion-icon name="arrow-up"></ion-icon>
               8.3% from last month
@@ -59,7 +62,7 @@
           </div>
           <div class="stat-info">
             <p class="stat-label">Total Product</p>
-            <h2 class="stat-value">384</h2>
+            <h2 class="stat-value">{{ totalProducts }}</h2>
             <span class="stat-change neutral">
               <ion-icon name="remove"></ion-icon>
               No change
@@ -75,7 +78,7 @@
           </div>
           <div class="stat-info">
             <p class="stat-label">Total Users</p>
-            <h2 class="stat-value">2,856</h2>
+            <h2 class="stat-value">{{ totalUsers }}</h2>
             <span class="stat-change positive">
               <ion-icon name="arrow-up"></ion-icon>
               15.2% from last month
@@ -85,94 +88,42 @@
       </ion-card>
     </div>
 
-    <!-- Charts Section -->
+    <!-- Charts Section (static for now) -->
     <div class="charts-section">
-      <ion-card class="chart-card">
-        <ion-card-header>
-          <div class="card-header-content">
-            <ion-card-title>Sales Overview</ion-card-title>
-            <ion-select value="month" interface="popover">
-              <ion-select-option value="week">This Week</ion-select-option>
-              <ion-select-option value="month">This Month</ion-select-option>
-              <ion-select-option value="year">This Year</ion-select-option>
-            </ion-select>
-          </div>
-        </ion-card-header>
-        <ion-card-content>
-          <div class="chart-placeholder">
-            <canvas id="salesChart"></canvas>
-          </div>
-        </ion-card-content>
-      </ion-card>
 
+
+      <!-- Category Stats -->
       <ion-card class="chart-card">
         <ion-card-header>
           <ion-card-title>Category Distribution</ion-card-title>
         </ion-card-header>
         <ion-card-content>
           <div class="category-stats">
-            <div class="category-item">
-              <div class="category-info">
-                <ion-icon name="laptop-outline" color="primary"></ion-icon>
-                <span>Electronics</span>
+            @for (cat of categoryStats; track cat.id) {
+              <div class="category-item">
+                <div class="category-info">
+                  <ion-icon [name]="cat.icon" color="primary"></ion-icon>
+                  <span>{{ cat.name }}</span>
+                </div>
+                <div class="category-progress">
+                  <ion-progress-bar [value]="cat.percentage / 100" color="primary"></ion-progress-bar>
+                  <span class="percentage">{{ cat.percentage | number:'1.0-0' }}%</span>
+                </div>
               </div>
-              <div class="category-progress">
-                <ion-progress-bar value="0.65" color="primary"></ion-progress-bar>
-                <span class="percentage">65%</span>
-              </div>
-            </div>
-            <div class="category-item">
-              <div class="category-info">
-                <ion-icon name="shirt-outline" color="secondary"></ion-icon>
-                <span>Fashion</span>
-              </div>
-              <div class="category-progress">
-                <ion-progress-bar value="0.45" color="secondary"></ion-progress-bar>
-                <span class="percentage">45%</span>
-              </div>
-            </div>
-            <div class="category-item">
-              <div class="category-info">
-                <ion-icon name="home-outline" color="tertiary"></ion-icon>
-                <span>Home & Living</span>
-              </div>
-              <div class="category-progress">
-                <ion-progress-bar value="0.38" color="tertiary"></ion-progress-bar>
-                <span class="percentage">38%</span>
-              </div>
-            </div>
-            <div class="category-item">
-              <div class="category-info">
-                <ion-icon name="basketball-outline" color="success"></ion-icon>
-                <span>Sports</span>
-              </div>
-              <div class="category-progress">
-                <ion-progress-bar value="0.28" color="success"></ion-progress-bar>
-                <span class="percentage">28%</span>
-              </div>
-            </div>
-            <div class="category-item">
-              <div class="category-info">
-                <ion-icon name="book-outline" color="warning"></ion-icon>
-                <span>Books</span>
-              </div>
-              <div class="category-progress">
-                <ion-progress-bar value="0.20" color="warning"></ion-progress-bar>
-                <span class="percentage">20%</span>
-              </div>
-            </div>
+            }
           </div>
         </ion-card-content>
       </ion-card>
+
     </div>
 
-    <!-- Recent Orders Section -->
+    <!-- Recent Orders Section (still static for now) -->
     <div class="recent-section">
       <ion-card>
         <ion-card-header>
           <div class="card-header-content">
             <ion-card-title>Recent Orders</ion-card-title>
-            <ion-button fill="clear" size="small" (click)="navigateTo('orders')">
+            <ion-button fill="clear" size="small" [routerLink]="['/admin/orders']">
               View All
               <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
             </ion-button>
@@ -189,6 +140,7 @@
               <span>Action</span>
             </div>
 
+            <!-- Static sample rows -->
             <div class="order-row">
               <span class="order-id">#ORD-1247</span>
               <span>John Doe</span>
@@ -217,28 +169,6 @@
               <span>Designer Sunglasses</span>
               <span class="amount">$129.99</span>
               <ion-badge color="primary">Shipped</ion-badge>
-              <ion-button fill="clear" size="small">
-                <ion-icon name="eye-outline"></ion-icon>
-              </ion-button>
-            </div>
-
-            <div class="order-row">
-              <span class="order-id">#ORD-1244</span>
-              <span>Emma Wilson</span>
-              <span>Running Shoes</span>
-              <span class="amount">$89.99</span>
-              <ion-badge color="success">Delivered</ion-badge>
-              <ion-button fill="clear" size="small">
-                <ion-icon name="eye-outline"></ion-icon>
-              </ion-button>
-            </div>
-
-            <div class="order-row">
-              <span class="order-id">#ORD-1243</span>
-              <span>David Brown</span>
-              <span>Leather Backpack</span>
-              <span class="amount">$149.99</span>
-              <ion-badge color="danger">Cancelled</ion-badge>
               <ion-button fill="clear" size="small">
                 <ion-icon name="eye-outline"></ion-icon>
               </ion-button>
